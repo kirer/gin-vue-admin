@@ -50,20 +50,6 @@ jwt:
 local:
     path: uploads/file
     store-path: uploads/file
-mongo:
-    coll: ""
-    connect-timeout-ms: 0
-    database: ""
-    hosts:
-        - host: ""
-          port: ""
-    is-zap: false
-    max-pool-size: 100
-    min-pool-size: 0
-    options: ""
-    password: ""
-    socket-timeout-ms: 0
-    username: ""
 mysql:
     prefix: ""
     port: "3306"
@@ -83,7 +69,7 @@ redis:
     password: ""
     db: 0
 system:
-    env: local
+    env: public
     oss-type: local
     router-prefix: ""
     addr: 8888

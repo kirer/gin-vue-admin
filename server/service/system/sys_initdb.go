@@ -8,14 +8,12 @@ import (
 	"sort"
 
 	"gorm.io/gorm"
+	"kirer.cn/server/config"
 	"kirer.cn/server/global"
-	"kirer.cn/server/model/system/request"
 )
 
 const (
 	Mysql           = "mysql"
-	Pgsql           = "pgsql"
-	Sqlite          = "sqlite"
 	InitSuccess     = "\n[%v] --> 初始数据成功!\n"
 	InitDataExist   = "\n[%v] --> %v 的初始数据已存在!\n"
 	InitDataFailed  = "\n[%v] --> %v 初始数据失败! \nerr: %+v\n"
@@ -45,10 +43,10 @@ type SubInitializer interface {
 
 // TypedDBInitHandler 执行传入的 initializer
 type TypedDBInitHandler interface {
-	EnsureDB(ctx context.Context, conf *request.InitDB) (context.Context, error) // 建库，失败属于 fatal error，因此让它 panic
-	WriteConfig(ctx context.Context) error                                       // 回写配置
-	InitTables(ctx context.Context, inits initSlice) error                       // 建表 handler
-	InitData(ctx context.Context, inits initSlice) error                         // 建数据 handler
+	EnsureDB(ctx context.Context, conf *config.Mysql) (context.Context, error) // 建库，失败属于 fatal error，因此让它 panic
+	WriteConfig(ctx context.Context) error                                     // 回写配置
+	InitTables(ctx context.Context, inits initSlice) error                     // 建表 handler
+	InitData(ctx context.Context, inits initSlice) error                       // 建数据 handler
 }
 
 // orderedInitializer 组合一个顺序字段，以供排序
@@ -87,7 +85,7 @@ func RegisterInit(order int, i SubInitializer) {
 type InitDBService struct{}
 
 // InitDB 创建数据库并初始化 总入口
-func (initDBService *InitDBService) InitDB(conf request.InitDB) (err error) {
+func (initDBService *InitDBService) InitDB(m config.Mysql) (err error) {
 	ctx := context.TODO()
 	if len(initializers) == 0 {
 		return errors.New("无可用初始化过程，请检查初始化是否已执行完成")
@@ -98,7 +96,7 @@ func (initDBService *InitDBService) InitDB(conf request.InitDB) (err error) {
 	// C必然>A|B，因此在AB之后执行，D必然>A|B|C，因此在ABC后执行，而E只依赖A，顺序与CD无关，因此E与CD哪个先执行并不影响
 	var initHandler TypedDBInitHandler = NewMysqlInitHandler()
 	ctx = context.WithValue(ctx, "dbtype", "mysql")
-	ctx, err = initHandler.EnsureDB(ctx, &conf)
+	ctx, err = initHandler.EnsureDB(ctx, &m)
 	if err != nil {
 		return err
 	}
