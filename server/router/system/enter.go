@@ -5,15 +5,13 @@ type RouterGroup struct {
 	JwtRouter
 	SysRouter
 	BaseRouter
-	InitRouter
 	MenuRouter
 	UserRouter
 	CasbinRouter
 	AutoCodeRouter
-	AuthorityRouter
-	DictionaryRouter
-	OperationRecordRouter
-	DictionaryDetailRouter
-	AuthorityBtnRouter
-	ChatGptRouter
+	AuthRouter
+	DicRouter
+	RecordRouter
+	DicDetailRouter
+	AuthBtnRouter
 }

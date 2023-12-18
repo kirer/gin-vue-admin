@@ -365,7 +365,7 @@ func (autoCodeService *AutoCodeService) CreateTemp(autoCode system.AutoCodeStruc
 			err = AutoCodeHistoryServiceApp.CreateAutoCodeHistory(
 				string(meta),
 				autoCode.StructName,
-				autoCode.Description,
+				autoCode.Desc,
 				bf.String(),
 				injectionCodeMeta.String(),
 				autoCode.TableName,
@@ -377,7 +377,7 @@ func (autoCodeService *AutoCodeService) CreateTemp(autoCode system.AutoCodeStruc
 			err = AutoCodeHistoryServiceApp.CreateAutoCodeHistory(
 				string(meta),
 				autoCode.StructName,
-				autoCode.Description,
+				autoCode.Desc,
 				bf.String(),
 				injectionCodeMeta.String(),
 				autoCode.StructName,
@@ -485,38 +485,38 @@ func (autoCodeService *AutoCodeService) AutoCreateApi(a *system.AutoCodeStruct) 
 	apiList := []system.SysApi{
 		{
 			Path:        "/" + a.Abbreviation + "/" + "create" + a.StructName,
-			Description: "新增" + a.Description,
-			ApiGroup:    a.Description,
+			Desc: "新增" + a.Desc,
+			Group:    a.Desc,
 			Method:      "POST",
 		},
 		{
 			Path:        "/" + a.Abbreviation + "/" + "delete" + a.StructName,
-			Description: "删除" + a.Description,
-			ApiGroup:    a.Description,
+			Desc: "删除" + a.Desc,
+			Group:    a.Desc,
 			Method:      "DELETE",
 		},
 		{
 			Path:        "/" + a.Abbreviation + "/" + "delete" + a.StructName + "ByIds",
-			Description: "批量删除" + a.Description,
-			ApiGroup:    a.Description,
+			Desc: "批量删除" + a.Desc,
+			Group:    a.Desc,
 			Method:      "DELETE",
 		},
 		{
 			Path:        "/" + a.Abbreviation + "/" + "update" + a.StructName,
-			Description: "更新" + a.Description,
-			ApiGroup:    a.Description,
+			Desc: "更新" + a.Desc,
+			Group:    a.Desc,
 			Method:      "PUT",
 		},
 		{
 			Path:        "/" + a.Abbreviation + "/" + "find" + a.StructName,
-			Description: "根据ID获取" + a.Description,
-			ApiGroup:    a.Description,
+			Desc: "根据ID获取" + a.Desc,
+			Group:    a.Desc,
 			Method:      "GET",
 		},
 		{
 			Path:        "/" + a.Abbreviation + "/" + "get" + a.StructName + "List",
-			Description: "获取" + a.Description + "列表",
-			ApiGroup:    a.Description,
+			Desc: "获取" + a.Desc + "列表",
+			Group:    a.Desc,
 			Method:      "GET",
 		},
 	}

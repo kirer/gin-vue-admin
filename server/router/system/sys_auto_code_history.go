@@ -8,12 +8,12 @@ import (
 type AutoCodeHistoryRouter struct{}
 
 func (s *AutoCodeRouter) InitAutoCodeHistoryRouter(Router *gin.RouterGroup) {
-	autoCodeHistoryRouter := Router.Group("autoCode")
-	autoCodeHistoryApi := v1.ApiGroupApp.SystemApiGroup.AutoCodeHistoryApi
+	router := Router.Group("auto_code_history")
+	api := v1.ApiGroupApp.SystemApiGroup.AutoCodeHistoryApi
 	{
-		autoCodeHistoryRouter.POST("getMeta", autoCodeHistoryApi.First)         // 根据id获取meta信息
-		autoCodeHistoryRouter.POST("rollback", autoCodeHistoryApi.RollBack)     // 回滚
-		autoCodeHistoryRouter.POST("delSysHistory", autoCodeHistoryApi.Delete)  // 删除回滚记录
-		autoCodeHistoryRouter.POST("getSysHistory", autoCodeHistoryApi.GetList) // 获取回滚记录分页
+		router.POST("delSysHistory", api.Delete) // 删除回滚记录
+		router.POST("get", api.Get)              // 根据id获取meta信息
+		router.POST("list", api.List)            // 获取回滚记录分页
+		router.POST("rollback", api.RollBack)    // 回滚
 	}
 }

@@ -1,3 +1,4 @@
+select concat('drop table ', TABLE_NAME, ';') from information_schema.TABLES where TABLE_SCHEMA = 'kirer';
 ## server项目结构
 
 ```shell

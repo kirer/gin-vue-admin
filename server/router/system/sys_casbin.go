@@ -9,13 +9,13 @@ import (
 type CasbinRouter struct{}
 
 func (s *CasbinRouter) InitCasbinRouter(Router *gin.RouterGroup) {
-	casbinRouter := Router.Group("casbin").Use(middleware.OperationRecord())
-	casbinRouterWithoutRecord := Router.Group("casbin")
-	casbinApi := v1.ApiGroupApp.SystemApiGroup.CasbinApi
+	router := Router.Group("casbin").Use(middleware.Record())
+	router2 := Router.Group("casbin")
+	api := v1.ApiGroupApp.SystemApiGroup.CasbinApi
 	{
-		casbinRouter.POST("updateCasbin", casbinApi.UpdateCasbin)
+		router.PUT("update", api.Update)
 	}
 	{
-		casbinRouterWithoutRecord.POST("getPolicyPathByAuthorityId", casbinApi.GetPolicyPathByAuthorityId)
+		router2.POST("get", api.Get)
 	}
 }

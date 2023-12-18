@@ -78,11 +78,11 @@ func (b *BaseApi) Login(c *gin.Context) {
 func (b *BaseApi) TokenNext(c *gin.Context, user system.SysUser) {
 	j := &utils.JWT{SigningKey: []byte(global.CONFIG.JWT.SigningKey)} // 唯一签名
 	claims := j.CreateClaims(systemReq.BaseClaims{
-		UUID:        user.UUID,
-		ID:          user.ID,
-		NickName:    user.NickName,
-		Username:    user.Username,
-		AuthorityId: user.AuthorityId,
+		UUID:     user.UUID,
+		ID:       user.ID,
+		NickName: user.NickName,
+		Username: user.Username,
+		AuthId:   user.AuthId,
 	})
 	token, err := j.CreateToken(claims)
 	if err != nil {
@@ -151,13 +151,13 @@ func (b *BaseApi) Register(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	var authorities []system.SysAuthority
-	for _, v := range r.AuthorityIds {
-		authorities = append(authorities, system.SysAuthority{
-			AuthorityId: v,
+	var authorities []system.SysAuth
+	for _, v := range r.AuthIds {
+		authorities = append(authorities, system.SysAuth{
+			AuthId: v,
 		})
 	}
-	user := &system.SysUser{Username: r.Username, NickName: r.NickName, Password: r.Password, HeaderImg: r.HeaderImg, AuthorityId: r.AuthorityId, Authorities: authorities, Enable: r.Enable, Phone: r.Phone, Email: r.Email}
+	user := &system.SysUser{Username: r.Username, NickName: r.NickName, Password: r.Password, HeaderImg: r.HeaderImg, AuthId: r.AuthId, Authorities: authorities, Enable: r.Enable, Phone: r.Phone, Email: r.Email}
 	userReturn, err := userService.Register(*user)
 	if err != nil {
 		global.LOG.Error("注册失败!", zap.Error(err))
@@ -233,7 +233,7 @@ func (b *BaseApi) GetUserList(c *gin.Context) {
 	}, "获取成功", c)
 }
 
-// SetUserAuthority
+// SetUserAuth
 // @Tags      SysUser
 // @Summary   更改用户权限
 // @Security  ApiKeyAuth
@@ -241,20 +241,20 @@ func (b *BaseApi) GetUserList(c *gin.Context) {
 // @Produce   application/json
 // @Param     data  body      systemReq.SetUserAuth          true  "用户UUID, 角色ID"
 // @Success   200   {object}  response.Response{msg=string}  "设置用户权限"
-// @Router    /user/setUserAuthority [post]
-func (b *BaseApi) SetUserAuthority(c *gin.Context) {
+// @Router    /user/setUserAuth [post]
+func (b *BaseApi) SetUserAuth(c *gin.Context) {
 	var sua systemReq.SetUserAuth
 	err := c.ShouldBindJSON(&sua)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if UserVerifyErr := utils.Verify(sua, utils.SetUserAuthorityVerify); UserVerifyErr != nil {
+	if UserVerifyErr := utils.Verify(sua, utils.SetUserAuthVerify); UserVerifyErr != nil {
 		response.FailWithMessage(UserVerifyErr.Error(), c)
 		return
 	}
 	userID := utils.GetUserID(c)
-	err = userService.SetUserAuthority(userID, sua.AuthorityId)
+	err = userService.SetUserAuth(userID, sua.AuthId)
 	if err != nil {
 		global.LOG.Error("修改失败!", zap.Error(err))
 		response.FailWithMessage(err.Error(), c)
@@ -262,7 +262,7 @@ func (b *BaseApi) SetUserAuthority(c *gin.Context) {
 	}
 	claims := utils.GetUserInfo(c)
 	j := &utils.JWT{SigningKey: []byte(global.CONFIG.JWT.SigningKey)} // 唯一签名
-	claims.AuthorityId = sua.AuthorityId
+	claims.AuthId = sua.AuthId
 	if token, err := j.CreateToken(*claims); err != nil {
 		global.LOG.Error("修改失败!", zap.Error(err))
 		response.FailWithMessage(err.Error(), c)
@@ -289,7 +289,7 @@ func (b *BaseApi) SetUserAuthorities(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	err = userService.SetUserAuthorities(sua.ID, sua.AuthorityIds)
+	err = userService.SetUserAuthorities(sua.ID, sua.AuthIds)
 	if err != nil {
 		global.LOG.Error("修改失败!", zap.Error(err))
 		response.FailWithMessage("修改失败", c)
@@ -355,8 +355,8 @@ func (b *BaseApi) SetUserInfo(c *gin.Context) {
 		return
 	}
 
-	if len(user.AuthorityIds) != 0 {
-		err = userService.SetUserAuthorities(user.ID, user.AuthorityIds)
+	if len(user.AuthIds) != 0 {
+		err = userService.SetUserAuthorities(user.ID, user.AuthIds)
 		if err != nil {
 			global.LOG.Error("设置失败!", zap.Error(err))
 			response.FailWithMessage("设置失败", c)

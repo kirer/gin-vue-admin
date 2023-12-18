@@ -6,15 +6,13 @@ type ServiceGroup struct {
 	MenuService
 	UserService
 	CasbinService
-	InitDBService
 	AutoCodeService
 	BaseMenuService
-	AuthorityService
-	DictionaryService
+	AuthService
+	DicService
 	SystemConfigService
 	AutoCodeHistoryService
-	OperationRecordService
-	DictionaryDetailService
-	AuthorityBtnService
-	ChatGptService
+	RecordService
+	DicDetailService
+	AuthBtnService
 }

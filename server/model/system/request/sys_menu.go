@@ -5,10 +5,10 @@ import (
 	"kirer.cn/server/model/system"
 )
 
-// Add menu authority info structure
-type AddMenuAuthorityInfo struct {
-	Menus       []system.SysBaseMenu `json:"menus"`
-	AuthorityId uint                 `json:"authorityId"` // 角色ID
+// Add menu auth info structure
+type AddMenuAuthInfo struct {
+	Menus  []system.SysBaseMenu `json:"menus"`
+	AuthId uint                 `json:"authId"` // 角色ID
 }
 
 func DefaultMenu() []system.SysBaseMenu {

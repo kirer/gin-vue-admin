@@ -46,12 +46,12 @@ func (userService *UserService) Login(u *system.SysUser) (userInter *system.SysU
 	}
 
 	var user system.SysUser
-	err = global.DB.Where("username = ?", u.Username).Preload("Authorities").Preload("Authority").First(&user).Error
+	err = global.DB.Where("username = ?", u.Username).Preload("Authorities").Preload("Auth").First(&user).Error
 	if err == nil {
 		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
 			return nil, errors.New("密码错误")
 		}
-		MenuServiceApp.UserAuthorityDefaultRouter(&user)
+		MenuServiceApp.UserAuthDefaultRouter(&user)
 	}
 	return &user, err
 }
@@ -91,48 +91,48 @@ func (userService *UserService) GetUserInfoList(info request.PageInfo) (list int
 	if err != nil {
 		return
 	}
-	err = db.Limit(limit).Offset(offset).Preload("Authorities").Preload("Authority").Find(&userList).Error
+	err = db.Limit(limit).Offset(offset).Preload("Authorities").Preload("Auth").Find(&userList).Error
 	return userList, total, err
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
-//@function: SetUserAuthority
+//@function: SetUserAuth
 //@description: 设置一个用户的权限
-//@param: uuid uuid.UUID, authorityId string
+//@param: uuid uuid.UUID, authId string
 //@return: err error
 
-func (userService *UserService) SetUserAuthority(id uint, authorityId uint) (err error) {
-	assignErr := global.DB.Where("sys_user_id = ? AND sys_authority_authority_id = ?", id, authorityId).First(&system.SysUserAuthority{}).Error
+func (userService *UserService) SetUserAuth(id uint, authId uint) (err error) {
+	assignErr := global.DB.Where("sys_user_id = ? AND sys_auth_id = ?", id, authId).First(&system.SysUserAuth{}).Error
 	if errors.Is(assignErr, gorm.ErrRecordNotFound) {
 		return errors.New("该用户无此角色")
 	}
-	err = global.DB.Where("id = ?", id).First(&system.SysUser{}).Update("authority_id", authorityId).Error
+	err = global.DB.Where("id = ?", id).First(&system.SysUser{}).Update("auth_id", authId).Error
 	return err
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
 //@function: SetUserAuthorities
 //@description: 设置一个用户的权限
-//@param: id uint, authorityIds []string
+//@param: id uint, authIds []string
 //@return: err error
 
-func (userService *UserService) SetUserAuthorities(id uint, authorityIds []uint) (err error) {
+func (userService *UserService) SetUserAuthorities(id uint, authIds []uint) (err error) {
 	return global.DB.Transaction(func(tx *gorm.DB) error {
-		TxErr := tx.Delete(&[]system.SysUserAuthority{}, "sys_user_id = ?", id).Error
+		TxErr := tx.Delete(&[]system.SysUserAuth{}, "sys_user_id = ?", id).Error
 		if TxErr != nil {
 			return TxErr
 		}
-		var useAuthority []system.SysUserAuthority
-		for _, v := range authorityIds {
-			useAuthority = append(useAuthority, system.SysUserAuthority{
-				SysUserId: id, SysAuthorityAuthorityId: v,
+		var useAuth []system.SysUserAuth
+		for _, v := range authIds {
+			useAuth = append(useAuth, system.SysUserAuth{
+				SysUserId: id, SysAuthId: v,
 			})
 		}
-		TxErr = tx.Create(&useAuthority).Error
+		TxErr = tx.Create(&useAuth).Error
 		if TxErr != nil {
 			return TxErr
 		}
-		TxErr = tx.Where("id = ?", id).First(&system.SysUser{}).Update("authority_id", authorityIds[0]).Error
+		TxErr = tx.Where("id = ?", id).First(&system.SysUser{}).Update("auth_id", authIds[0]).Error
 		if TxErr != nil {
 			return TxErr
 		}
@@ -152,7 +152,7 @@ func (userService *UserService) DeleteUser(id int) (err error) {
 		if err := tx.Where("id = ?", id).Delete(&system.SysUser{}).Error; err != nil {
 			return err
 		}
-		if err := tx.Delete(&[]system.SysUserAuthority{}, "sys_user_id = ?", id).Error; err != nil {
+		if err := tx.Delete(&[]system.SysUserAuth{}, "sys_user_id = ?", id).Error; err != nil {
 			return err
 		}
 		return nil
@@ -201,11 +201,11 @@ func (userService *UserService) SetSelfInfo(req system.SysUser) error {
 
 func (userService *UserService) GetUserInfo(uuid uuid.UUID) (user system.SysUser, err error) {
 	var reqUser system.SysUser
-	err = global.DB.Preload("Authorities").Preload("Authority").First(&reqUser, "uuid = ?", uuid).Error
+	err = global.DB.Preload("Authorities").Preload("Auth").First(&reqUser, "uuid = ?", uuid).Error
 	if err != nil {
 		return reqUser, err
 	}
-	MenuServiceApp.UserAuthorityDefaultRouter(&reqUser)
+	MenuServiceApp.UserAuthDefaultRouter(&reqUser)
 	return reqUser, err
 }
 

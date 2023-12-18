@@ -10,44 +10,38 @@ import (
 
 type BaseMenuService struct{}
 
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: DeleteBaseMenu
-//@description: 删除基础路由
-//@param: id float64
-//@return: err error
-
-func (baseMenuService *BaseMenuService) DeleteBaseMenu(id int) (err error) {
+func (baseMenuService *BaseMenuService) Delete(id int) (err error) {
 	err = global.DB.Preload("MenuBtn").Preload("Parameters").Where("parent_id = ?", id).First(&system.SysBaseMenu{}).Error
 	if err != nil {
 		var menu system.SysBaseMenu
-		db := global.DB.Preload("SysAuthoritys").Where("id = ?", id).First(&menu).Delete(&menu)
+		db := global.DB.Preload("SysAuths").Where("id = ?", id).First(&menu).Delete(&menu)
 		err = global.DB.Delete(&system.SysBaseMenuParameter{}, "sys_base_menu_id = ?", id).Error
-		err = global.DB.Delete(&system.SysBaseMenuBtn{}, "sys_base_menu_id = ?", id).Error
-		err = global.DB.Delete(&system.SysAuthorityBtn{}, "sys_menu_id = ?", id).Error
 		if err != nil {
-			return err
+			return
 		}
-		if len(menu.SysAuthoritys) > 0 {
-			err = global.DB.Model(&menu).Association("SysAuthoritys").Delete(&menu.SysAuthoritys)
+		err = global.DB.Delete(&system.SysBaseMenuBtn{}, "sys_base_menu_id = ?", id).Error
+		if err != nil {
+			return
+		}
+		err = global.DB.Delete(&system.SysAuthBtn{}, "sys_menu_id = ?", id).Error
+		if err != nil {
+			return
+		}
+		if len(menu.SysAuths) > 0 {
+			err = global.DB.Model(&menu).Association("SysAuths").Delete(&menu.SysAuths)
 		} else {
 			err = db.Error
-			if err != nil {
-				return
-			}
+		}
+		if err != nil {
+			return
 		}
 	} else {
 		return errors.New("此菜单存在子菜单不可删除")
 	}
-	return err
+	return
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: UpdateBaseMenu
-//@description: 更新路由
-//@param: menu model.SysBaseMenu
-//@return: err error
-
-func (baseMenuService *BaseMenuService) UpdateBaseMenu(menu system.SysBaseMenu) (err error) {
+func (baseMenuService *BaseMenuService) Update(menu system.SysBaseMenu) (err error) {
 	var oldMenu system.SysBaseMenu
 	upDateMap := make(map[string]interface{})
 	upDateMap["keep_alive"] = menu.KeepAlive
@@ -113,13 +107,7 @@ func (baseMenuService *BaseMenuService) UpdateBaseMenu(menu system.SysBaseMenu) 
 	return err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: GetBaseMenuById
-//@description: 返回当前选中menu
-//@param: id float64
-//@return: menu system.SysBaseMenu, err error
-
-func (baseMenuService *BaseMenuService) GetBaseMenuById(id int) (menu system.SysBaseMenu, err error) {
+func (baseMenuService *BaseMenuService) Get(id int) (menu system.SysBaseMenu, err error) {
 	err = global.DB.Preload("MenuBtn").Preload("Parameters").Where("id = ?", id).First(&menu).Error
 	return
 }

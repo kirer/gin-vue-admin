@@ -55,11 +55,11 @@ mysql:
     port: "3306"
     config: charset=utf8mb4&parseTime=True&loc=Local
     db-name: kirer
-    username: root
-    password: "44021993"
+    username: kirer
+    password: "Kn46iSBh7h5neEif"
     path: 127.0.0.1
     engine: ""
-    log-mode: error
+    log-mode: silent
     max-idle-conns: 10
     max-open-conns: 100
     singular: false
@@ -72,7 +72,7 @@ system:
     env: public
     oss-type: local
     router-prefix: ""
-    addr: 8888
+    addr: 8889
     iplimit-count: 15000
     iplimit-time: 3600
     use-multipoint: false

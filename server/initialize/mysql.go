@@ -10,6 +10,7 @@ import (
 	"kirer.cn/server/global"
 	"kirer.cn/server/initialize/internal"
 	"kirer.cn/server/model/system"
+	"kirer.cn/server/source"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -25,6 +26,7 @@ func Gorm() *gorm.DB {
 		panic(fmt.Errorf(">>数据库连接失败:%s", err))
 	}
 	fmt.Printf(">>数据库连接成功:%s\n", m.Dsn())
+	source.EnsureTableData(db)
 	db.InstanceSet("gorm:table_options", "ENGINE="+m.Engine)
 	sqlDB, _ := db.DB()
 	sqlDB.SetMaxIdleConns(m.MaxIdleConns)
@@ -34,7 +36,6 @@ func Gorm() *gorm.DB {
 		panic(fmt.Errorf(">>数据库注册表失败:%s", err))
 	}
 	fmt.Println(">>数据库初始化表成功")
-	ensureTableData()
 	return db
 }
 func ensureDB(m config.Mysql) (db *gorm.DB, err error) {
@@ -83,16 +84,15 @@ func registerTables(db *gorm.DB) (err error) {
 		system.SysUser{},
 		system.SysBaseMenu{},
 		system.JwtBlacklist{},
-		system.SysAuthority{},
-		system.SysDictionary{},
-		system.SysOperationRecord{},
+		system.SysAuth{},
+		system.SysDic{},
+		system.SysRecord{},
 		system.SysAutoCodeHistory{},
-		system.SysDictionaryDetail{},
+		system.SysDicDetail{},
 		system.SysBaseMenuParameter{},
 		system.SysBaseMenuBtn{},
-		system.SysAuthorityBtn{},
+		system.SysAuthBtn{},
 		system.SysAutoCode{},
-		system.SysChatGptOption{},
 	)
 	return
 }

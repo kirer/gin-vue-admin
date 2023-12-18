@@ -6,18 +6,22 @@ import (
 
 type SysBaseMenu struct {
 	global.MODEL
-	MenuLevel     uint                                       `json:"-"`
-	ParentId      string                                     `json:"parentId" gorm:"comment:父菜单ID"`     // 父菜单ID
-	Path          string                                     `json:"path" gorm:"comment:路由path"`        // 路由path
-	Name          string                                     `json:"name" gorm:"comment:路由name"`        // 路由name
-	Hidden        bool                                       `json:"hidden" gorm:"comment:是否在列表隐藏"`     // 是否在列表隐藏
-	Component     string                                     `json:"component" gorm:"comment:对应前端文件路径"` // 对应前端文件路径
-	Sort          int                                        `json:"sort" gorm:"comment:排序标记"`          // 排序标记
-	Meta          `json:"meta" gorm:"embedded;comment:附加属性"` // 附加属性
-	SysAuthoritys []SysAuthority                             `json:"authoritys" gorm:"many2many:sys_authority_menus;"`
-	Children      []SysBaseMenu                              `json:"children" gorm:"-"`
-	Parameters    []SysBaseMenuParameter                     `json:"parameters"`
-	MenuBtn       []SysBaseMenuBtn                           `json:"menuBtn"`
+	Meta       `json:"meta" gorm:"embedded;comment:附加属性"` // 附加属性
+	MenuLevel  uint                                       `json:"-"`
+	ParentId   string                                     `json:"parentId" gorm:"comment:父菜单ID"`     // 父菜单ID
+	Path       string                                     `json:"path" gorm:"comment:路由path"`        // 路由path
+	Name       string                                     `json:"name" gorm:"comment:路由name"`        // 路由name
+	Hidden     bool                                       `json:"hidden" gorm:"comment:是否在列表隐藏"`     // 是否在列表隐藏
+	Component  string                                     `json:"component" gorm:"comment:对应前端文件路径"` // 对应前端文件路径
+	Sort       int                                        `json:"sort" gorm:"comment:排序标记"`          // 排序标记
+	SysAuths   []SysAuth                                  `json:"auths" gorm:"many2many:sys_auth_menu;"`
+	Children   []SysBaseMenu                              `json:"children" gorm:"-"`
+	Parameters []SysBaseMenuParameter                     `json:"parameters"`
+	MenuBtn    []SysBaseMenuBtn                           `json:"menuBtn"`
+}
+
+func (SysBaseMenu) TableName() string {
+	return "sys_menu"
 }
 
 type Meta struct {
@@ -37,6 +41,17 @@ type SysBaseMenuParameter struct {
 	Value         string `json:"value" gorm:"comment:地址栏携带参数的值"`            // 地址栏携带参数的值
 }
 
-func (SysBaseMenu) TableName() string {
-	return "sys_base_menus"
+func (SysBaseMenuParameter) TableName() string {
+	return "sys_menu_para"
+}
+
+type SysBaseMenuBtn struct {
+	global.MODEL
+	Name          string `json:"name" gorm:"comment:按钮关键key"`
+	Desc          string `json:"desc" gorm:"按钮备注"`
+	SysBaseMenuID uint   `json:"sysBaseMenuID" gorm:"comment:菜单ID"`
+}
+
+func (SysBaseMenuBtn) TableName() string {
+	return "sys_menu_btn"
 }

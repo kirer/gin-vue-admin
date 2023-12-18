@@ -13,7 +13,7 @@ type SysAutoCodeHistory struct {
 	global.MODEL
 	Package       string `json:"package"`
 	BusinessDB    string `json:"businessDB"`
-	TableName     string `json:"tableName"`
+	TableNames     string `json:"tableName"`
 	RequestMeta   string `gorm:"type:text" json:"requestMeta,omitempty"`   // 前端传入的结构化信息
 	AutoCodePath  string `gorm:"type:text" json:"autoCodePath,omitempty"`  // 其他meta信息 path;path
 	InjectionMeta string `gorm:"type:text" json:"injectionMeta,omitempty"` // 注入的内容 RouterPath@functionName@RouterString;
@@ -21,6 +21,10 @@ type SysAutoCodeHistory struct {
 	StructCNName  string `json:"structCNName"`
 	ApiIDs        string `json:"apiIDs,omitempty"` // api表注册内容
 	Flag          int    `json:"flag"`             // 表示对应状态 0 代表创建, 1 代表回滚 ...
+}
+
+func (SysAutoCodeHistory) TableName() string {
+	return "sys_auto_code_his"
 }
 
 // ToRequestIds ApiIDs 转换 request.IdsReq

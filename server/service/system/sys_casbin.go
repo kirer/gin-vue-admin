@@ -16,27 +16,21 @@ import (
 	"kirer.cn/server/model/system/request"
 )
 
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: UpdateCasbin
-//@description: 更新casbin权限
-//@param: authorityId string, casbinInfos []request.CasbinInfo
-//@return: error
-
 type CasbinService struct{}
 
 var CasbinServiceApp = new(CasbinService)
 
-func (casbinService *CasbinService) UpdateCasbin(AuthorityID uint, casbinInfos []request.CasbinInfo) error {
-	authorityId := strconv.Itoa(int(AuthorityID))
-	casbinService.ClearCasbin(0, authorityId)
+func (casbinService *CasbinService) Update(AuthID uint, casbinInfos []request.CasbinInfo) error {
+	authId := strconv.Itoa(int(AuthID))
+	casbinService.ClearCasbin(0, authId)
 	rules := [][]string{}
 	//做权限去重处理
 	deduplicateMap := make(map[string]bool)
 	for _, v := range casbinInfos {
-		key := authorityId + v.Path + v.Method
+		key := authId + v.Path + v.Method
 		if _, ok := deduplicateMap[key]; !ok {
 			deduplicateMap[key] = true
-			rules = append(rules, []string{authorityId, v.Path, v.Method})
+			rules = append(rules, []string{authId, v.Path, v.Method})
 		}
 	}
 	e := casbinService.Casbin()
@@ -46,12 +40,6 @@ func (casbinService *CasbinService) UpdateCasbin(AuthorityID uint, casbinInfos [
 	}
 	return nil
 }
-
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: UpdateCasbinApi
-//@description: API更新随动
-//@param: oldPath string, newPath string, oldMethod string, newMethod string
-//@return: error
 
 func (casbinService *CasbinService) UpdateCasbinApi(oldPath string, newPath string, oldMethod string, newMethod string) error {
 	err := global.DB.Model(&gormadapter.CasbinRule{}).Where("v1 = ? AND v2 = ?", oldPath, oldMethod).Updates(map[string]interface{}{
@@ -66,16 +54,10 @@ func (casbinService *CasbinService) UpdateCasbinApi(oldPath string, newPath stri
 	return err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: GetPolicyPathByAuthorityId
-//@description: 获取权限列表
-//@param: authorityId string
-//@return: pathMaps []request.CasbinInfo
-
-func (casbinService *CasbinService) GetPolicyPathByAuthorityId(AuthorityID uint) (pathMaps []request.CasbinInfo) {
+func (casbinService *CasbinService) Get(AuthID uint) (pathMaps []request.CasbinInfo) {
 	e := casbinService.Casbin()
-	authorityId := strconv.Itoa(int(AuthorityID))
-	list := e.GetFilteredPolicy(0, authorityId)
+	authId := strconv.Itoa(int(AuthID))
+	list := e.GetFilteredPolicy(0, authId)
 	for _, v := range list {
 		pathMaps = append(pathMaps, request.CasbinInfo{
 			Path:   v[1],
@@ -85,12 +67,11 @@ func (casbinService *CasbinService) GetPolicyPathByAuthorityId(AuthorityID uint)
 	return pathMaps
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: ClearCasbin
-//@description: 清除匹配的权限
-//@param: v int, p ...string
-//@return: bool
-
+// @author: [piexlmax](https://github.com/piexlmax)
+// @function: ClearCasbin
+// @description: 清除匹配的权限
+// @param: v int, p ...string
+// @return: bool
 func (casbinService *CasbinService) ClearCasbin(v int, p ...string) bool {
 	e := casbinService.Casbin()
 	success, _ := e.RemoveFilteredPolicy(v, p...)
@@ -100,21 +81,21 @@ func (casbinService *CasbinService) ClearCasbin(v int, p ...string) bool {
 //@author: [piexlmax](https://github.com/piexlmax)
 //@function: RemoveFilteredPolicy
 //@description: 使用数据库方法清理筛选的politicy 此方法需要调用FreshCasbin方法才可以在系统中即刻生效
-//@param: db *gorm.DB, authorityId string
+//@param: db *gorm.DB, authId string
 //@return: error
 
-func (casbinService *CasbinService) RemoveFilteredPolicy(db *gorm.DB, authorityId string) error {
-	return db.Delete(&gormadapter.CasbinRule{}, "v0 = ?", authorityId).Error
+func (casbinService *CasbinService) RemoveFilteredPolicy(db *gorm.DB, authId string) error {
+	return db.Delete(&gormadapter.CasbinRule{}, "v0 = ?", authId).Error
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
 //@function: RemoveFilteredPolicy
 //@description: 同步目前数据库的policy 此方法需要调用FreshCasbin方法才可以在系统中即刻生效
-//@param: db *gorm.DB, authorityId string, rules [][]string
+//@param: db *gorm.DB, authId string, rules [][]string
 //@return: error
 
-func (casbinService *CasbinService) SyncPolicy(db *gorm.DB, authorityId string, rules [][]string) error {
-	err := casbinService.RemoveFilteredPolicy(db, authorityId)
+func (casbinService *CasbinService) SyncPolicy(db *gorm.DB, authId string, rules [][]string) error {
+	err := casbinService.RemoveFilteredPolicy(db, authId)
 	if err != nil {
 		return err
 	}

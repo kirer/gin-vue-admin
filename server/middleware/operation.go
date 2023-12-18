@@ -20,7 +20,7 @@ import (
 	"kirer.cn/server/service"
 )
 
-var operationRecordService = service.ServiceGroupApp.SystemServiceGroup.OperationRecordService
+var operationRecordService = service.ServiceGroupApp.SystemServiceGroup.RecordService
 
 var respPool sync.Pool
 var bufferSize = 1024
@@ -31,7 +31,7 @@ func init() {
 	}
 }
 
-func OperationRecord() gin.HandlerFunc {
+func Record() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var body []byte
 		var userId int
@@ -66,7 +66,7 @@ func OperationRecord() gin.HandlerFunc {
 			}
 			userId = id
 		}
-		record := system.SysOperationRecord{
+		record := system.SysRecord{
 			Ip:     c.ClientIP(),
 			Method: c.Request.Method,
 			Path:   c.Request.URL.Path,
@@ -119,7 +119,7 @@ func OperationRecord() gin.HandlerFunc {
 			}
 		}
 
-		if err := operationRecordService.CreateSysOperationRecord(record); err != nil {
+		if err := operationRecordService.Create(record); err != nil {
 			global.LOG.Error("create operation record error:", zap.Error(err))
 		}
 	}

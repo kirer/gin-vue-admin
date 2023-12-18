@@ -8,26 +8,14 @@ import (
 	"kirer.cn/server/utils"
 )
 
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: GetSystemConfig
-//@description: 读取配置文件
-//@return: conf config.Server, err error
-
 type SystemConfigService struct{}
 
-func (systemConfigService *SystemConfigService) GetSystemConfig() (conf config.Server, err error) {
+func (systemConfigService *SystemConfigService) GetConfig() (conf config.Server, err error) {
 	return global.CONFIG, nil
 }
 
-// @description   set system config,
-//@author: [piexlmax](https://github.com/piexlmax)
-//@function: SetSystemConfig
-//@description: 设置配置文件
-//@param: system model.System
-//@return: err error
-
-func (systemConfigService *SystemConfigService) SetSystemConfig(system system.System) (err error) {
-	cs := utils.StructToMap(system.Config)
+func (systemConfigService *SystemConfigService) SetConfig(data system.System) (err error) {
+	cs := utils.StructToMap(data.Config)
 	for k, v := range cs {
 		global.VP.Set(k, v)
 	}
@@ -35,12 +23,7 @@ func (systemConfigService *SystemConfigService) SetSystemConfig(system system.Sy
 	return err
 }
 
-//@author: [SliverHorn](https://github.com/SliverHorn)
-//@function: GetServerInfo
-//@description: 获取服务器信息
-//@return: server *utils.Server, err error
-
-func (systemConfigService *SystemConfigService) GetServerInfo() (server *utils.Server, err error) {
+func (systemConfigService *SystemConfigService) GetInfo() (server *utils.Server, err error) {
 	var s utils.Server
 	s.Os = utils.InitOS()
 	if s.Cpu, err = utils.InitCPU(); err != nil {

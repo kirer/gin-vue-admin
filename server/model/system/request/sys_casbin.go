@@ -8,7 +8,7 @@ type CasbinInfo struct {
 
 // Casbin structure for input parameters
 type CasbinInReceive struct {
-	AuthorityId uint         `json:"authorityId"` // 权限id
+	AuthId      uint         `json:"authId"` // 权限id
 	CasbinInfos []CasbinInfo `json:"casbinInfos"`
 }
 
@@ -19,7 +19,7 @@ func DefaultCasbin() []CasbinInfo {
 		{Path: "/base/login", Method: "POST"},
 		{Path: "/user/admin_register", Method: "POST"},
 		{Path: "/user/changePassword", Method: "POST"},
-		{Path: "/user/setUserAuthority", Method: "POST"},
+		{Path: "/user/setUserAuth", Method: "POST"},
 		{Path: "/user/setUserInfo", Method: "PUT"},
 		{Path: "/user/getUserInfo", Method: "GET"},
 	}

@@ -15,7 +15,7 @@ type AutoCodeStruct struct {
 	PackageName        string   `json:"packageName"`        // 文件名称
 	HumpPackageName    string   `json:"humpPackageName"`    // go文件名称
 	Abbreviation       string   `json:"abbreviation"`       // Struct简称
-	Description        string   `json:"description"`        // Struct中文名称
+	Desc               string   `json:"desc"`               // Struct中文名称
 	AutoCreateApiToSql bool     `json:"autoCreateApiToSql"` // 是否自动创建api
 	AutoCreateResource bool     `json:"autoCreateResource"` // 是否自动创建资源标识
 	AutoMoveFile       bool     `json:"autoMoveFile"`       // 是否自动移动文件
@@ -77,6 +77,10 @@ type SysAutoCode struct {
 	PackageName string `json:"packageName" gorm:"comment:包名"`
 	Label       string `json:"label" gorm:"comment:展示名"`
 	Desc        string `json:"desc" gorm:"comment:描述"`
+}
+
+func (SysAutoCode) TableName() string {
+	return "sys_auto_code"
 }
 
 type AutoPlugReq struct {

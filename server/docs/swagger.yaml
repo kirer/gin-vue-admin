@@ -657,7 +657,7 @@ definitions:
         allOf:
         - $ref: '#/definitions/system.SysUser'
         description: 管理详情
-      sysUserAuthorityID:
+      sysUserAuthID:
         description: 管理角色ID
         type: integer
       sysUserId:
@@ -759,9 +759,9 @@ definitions:
         description: 收件人:多个以英文逗号分隔 例：a@qq.com b@qq.com 正式开发中请把此项目作为参数使用
         type: string
     type: object
-  request.AddMenuAuthorityInfo:
+  request.AddMenuAuthInfo:
     properties:
-      authorityId:
+      authId:
         description: 角色ID
         type: integer
       menus:
@@ -771,7 +771,7 @@ definitions:
     type: object
   request.CasbinInReceive:
     properties:
-      authorityId:
+      authId:
         description: 权限id
         type: integer
       casbinInfos:
@@ -799,9 +799,9 @@ definitions:
     type: object
   request.Empty:
     type: object
-  request.GetAuthorityId:
+  request.GetAuthId:
     properties:
-      authorityId:
+      authId:
         description: 角色ID
         type: integer
     type: object
@@ -873,10 +873,10 @@ definitions:
     type: object
   request.Register:
     properties:
-      authorityId:
+      authId:
         example: int 角色id
         type: string
-      authorityIds:
+      authIds:
         example: '[]uint 角色id'
         type: string
       email:
@@ -951,13 +951,13 @@ definitions:
     type: object
   request.SetUserAuth:
     properties:
-      authorityId:
+      authId:
         description: 角色ID
         type: integer
     type: object
   request.SetUserAuthorities:
     properties:
-      authorityIds:
+      authIds:
         description: 角色ID
         items:
           type: integer
@@ -965,9 +965,9 @@ definitions:
       id:
         type: integer
     type: object
-  request.SysAuthorityBtnReq:
+  request.SysAuthBtnReq:
     properties:
-      authorityId:
+      authId:
         type: integer
       menuID:
         type: integer
@@ -1066,25 +1066,25 @@ definitions:
       api:
         $ref: '#/definitions/system.SysApi'
     type: object
-  response.SysAuthorityBtnRes:
+  response.SysAuthBtnRes:
     properties:
       selected:
         items:
           type: integer
         type: array
     type: object
-  response.SysAuthorityCopyResponse:
+  response.SysAuthCopyResponse:
     properties:
-      authority:
-        $ref: '#/definitions/system.SysAuthority'
-      oldAuthorityId:
+      auth:
+        $ref: '#/definitions/system.SysAuth'
+      oldAuthId:
         description: 旧角色ID
         type: integer
     type: object
-  response.SysAuthorityResponse:
+  response.SysAuthResponse:
     properties:
-      authority:
-        $ref: '#/definitions/system.SysAuthority'
+      auth:
+        $ref: '#/definitions/system.SysAuth'
     type: object
   response.SysBaseMenuResponse:
     properties:
@@ -1253,24 +1253,24 @@ definitions:
         description: 更新时间
         type: string
     type: object
-  system.SysAuthority:
+  system.SysAuth:
     properties:
-      authorityId:
+      authId:
         description: 角色ID
         type: integer
-      authorityName:
+      authName:
         description: 角色名
         type: string
       children:
         items:
-          $ref: '#/definitions/system.SysAuthority'
+          $ref: '#/definitions/system.SysAuth'
         type: array
       createdAt:
         description: 创建时间
         type: string
-      dataAuthorityId:
+      dataAuthId:
         items:
-          $ref: '#/definitions/system.SysAuthority'
+          $ref: '#/definitions/system.SysAuth'
         type: array
       defaultRouter:
         description: 默认菜单(默认dashboard)
@@ -1308,9 +1308,9 @@ definitions:
     type: object
   system.SysBaseMenu:
     properties:
-      authoritys:
+      auths:
         items:
-          $ref: '#/definitions/system.SysAuthority'
+          $ref: '#/definitions/system.SysAuth'
         type: array
       children:
         items:
@@ -1397,7 +1397,7 @@ definitions:
         description: 地址栏携带参数的值
         type: string
     type: object
-  system.SysDictionary:
+  system.SysDic:
     properties:
       createdAt:
         description: 创建时间
@@ -1414,9 +1414,9 @@ definitions:
       status:
         description: 状态
         type: boolean
-      sysDictionaryDetails:
+      sysDicDetails:
         items:
-          $ref: '#/definitions/system.SysDictionaryDetail'
+          $ref: '#/definitions/system.SysDicDetail'
         type: array
       type:
         description: 字典名（英）
@@ -1425,7 +1425,7 @@ definitions:
         description: 更新时间
         type: string
     type: object
-  system.SysDictionaryDetail:
+  system.SysDicDetail:
     properties:
       createdAt:
         description: 创建时间
@@ -1445,7 +1445,7 @@ definitions:
       status:
         description: 启用状态
         type: boolean
-      sysDictionaryID:
+      sysDicID:
         description: 关联标记
         type: integer
       updatedAt:
@@ -1457,9 +1457,9 @@ definitions:
     type: object
   system.SysMenu:
     properties:
-      authoritys:
+      auths:
         items:
-          $ref: '#/definitions/system.SysAuthority'
+          $ref: '#/definitions/system.SysAuth'
         type: array
       btns:
         additionalProperties:
@@ -1511,7 +1511,7 @@ definitions:
         description: 更新时间
         type: string
     type: object
-  system.SysOperationRecord:
+  system.SysRecord:
     properties:
       agent:
         description: 代理
@@ -1562,11 +1562,11 @@ definitions:
         type: string
       authorities:
         items:
-          $ref: '#/definitions/system.SysAuthority'
+          $ref: '#/definitions/system.SysAuth'
         type: array
-      authority:
-        $ref: '#/definitions/system.SysAuthority'
-      authorityId:
+      auth:
+        $ref: '#/definitions/system.SysAuth'
+      authId:
         description: 用户角色ID
         type: integer
       baseColor:
@@ -1829,7 +1829,7 @@ paths:
       summary: 修改基础api
       tags:
       - SysApi
-  /authority/copyAuthority:
+  /auth/copyAuth:
     post:
       consumes:
       - application/json
@@ -1839,7 +1839,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/response.SysAuthorityCopyResponse'
+          $ref: '#/definitions/response.SysAuthCopyResponse'
       produces:
       - application/json
       responses:
@@ -1850,7 +1850,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/response.SysAuthorityResponse'
+                  $ref: '#/definitions/response.SysAuthResponse'
                 msg:
                   type: string
               type: object
@@ -1858,8 +1858,8 @@ paths:
       - ApiKeyAuth: []
       summary: 拷贝角色
       tags:
-      - Authority
-  /authority/createAuthority:
+      - Auth
+  /auth/createAuth:
     post:
       consumes:
       - application/json
@@ -1869,7 +1869,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysAuthority'
+          $ref: '#/definitions/system.SysAuth'
       produces:
       - application/json
       responses:
@@ -1880,7 +1880,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/response.SysAuthorityResponse'
+                  $ref: '#/definitions/response.SysAuthResponse'
                 msg:
                   type: string
               type: object
@@ -1888,8 +1888,8 @@ paths:
       - ApiKeyAuth: []
       summary: 创建角色
       tags:
-      - Authority
-  /authority/deleteAuthority:
+      - Auth
+  /auth/deleteAuth:
     post:
       consumes:
       - application/json
@@ -1899,7 +1899,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysAuthority'
+          $ref: '#/definitions/system.SysAuth'
       produces:
       - application/json
       responses:
@@ -1916,8 +1916,8 @@ paths:
       - ApiKeyAuth: []
       summary: 删除角色
       tags:
-      - Authority
-  /authority/getAuthorityList:
+      - Auth
+  /auth/getAuthList:
     post:
       consumes:
       - application/json
@@ -1946,8 +1946,8 @@ paths:
       - ApiKeyAuth: []
       summary: 分页获取角色列表
       tags:
-      - Authority
-  /authority/setDataAuthority:
+      - Auth
+  /auth/setDataAuth:
     post:
       consumes:
       - application/json
@@ -1957,7 +1957,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysAuthority'
+          $ref: '#/definitions/system.SysAuth'
       produces:
       - application/json
       responses:
@@ -1974,8 +1974,8 @@ paths:
       - ApiKeyAuth: []
       summary: 设置角色资源权限
       tags:
-      - Authority
-  /authority/updateAuthority:
+      - Auth
+  /auth/updateAuth:
     post:
       consumes:
       - application/json
@@ -1985,7 +1985,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysAuthority'
+          $ref: '#/definitions/system.SysAuth'
       produces:
       - application/json
       responses:
@@ -1996,7 +1996,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/response.SysAuthorityResponse'
+                  $ref: '#/definitions/response.SysAuthResponse'
                 msg:
                   type: string
               type: object
@@ -2004,8 +2004,8 @@ paths:
       - ApiKeyAuth: []
       summary: 更新角色信息
       tags:
-      - Authority
-  /authorityBtn/canRemoveAuthorityBtn:
+      - Auth
+  /authBtn/canRemoveAuthBtn:
     post:
       consumes:
       - application/json
@@ -2025,8 +2025,8 @@ paths:
       - ApiKeyAuth: []
       summary: 设置权限按钮
       tags:
-      - AuthorityBtn
-  /authorityBtn/getAuthorityBtn:
+      - AuthBtn
+  /authBtn/getAuthBtn:
     post:
       consumes:
       - application/json
@@ -2036,7 +2036,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/request.SysAuthorityBtnReq'
+          $ref: '#/definitions/request.SysAuthBtnReq'
       produces:
       - application/json
       responses:
@@ -2047,7 +2047,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/response.SysAuthorityBtnRes'
+                  $ref: '#/definitions/response.SysAuthBtnRes'
                 msg:
                   type: string
               type: object
@@ -2055,8 +2055,8 @@ paths:
       - ApiKeyAuth: []
       summary: 获取权限按钮
       tags:
-      - AuthorityBtn
-  /authorityBtn/setAuthorityBtn:
+      - AuthBtn
+  /authBtn/setAuthBtn:
     post:
       consumes:
       - application/json
@@ -2066,7 +2066,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/request.SysAuthorityBtnReq'
+          $ref: '#/definitions/request.SysAuthBtnReq'
       produces:
       - application/json
       responses:
@@ -2083,7 +2083,7 @@ paths:
       - ApiKeyAuth: []
       summary: 设置权限按钮
       tags:
-      - AuthorityBtn
+      - AuthBtn
   /autoCode/createPackage:
     post:
       consumes:
@@ -2583,7 +2583,7 @@ paths:
       summary: 更新角色api权限
       tags:
       - Casbin
-  /casbin/getPolicyPathByAuthorityId:
+  /casbin/getPolicyPathByAuthId:
     post:
       consumes:
       - application/json
@@ -2663,7 +2663,7 @@ paths:
         type: integer
       - description: 管理角色ID
         in: query
-        name: sysUserAuthorityID
+        name: sysUserAuthID
         type: integer
       - description: 管理ID
         in: query
@@ -3078,7 +3078,7 @@ paths:
       summary: 新增菜单
       tags:
       - Menu
-  /menu/addMenuAuthority:
+  /menu/addMenuAuth:
     post:
       consumes:
       - application/json
@@ -3088,7 +3088,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/request.AddMenuAuthorityInfo'
+          $ref: '#/definitions/request.AddMenuAuthInfo'
       produces:
       - application/json
       responses:
@@ -3105,7 +3105,7 @@ paths:
       - ApiKeyAuth: []
       summary: 增加menu和角色关联关系
       tags:
-      - AuthorityMenu
+      - AuthMenu
   /menu/deleteBaseMenu:
     post:
       consumes:
@@ -3191,7 +3191,7 @@ paths:
       - ApiKeyAuth: []
       summary: 获取用户动态路由
       tags:
-      - AuthorityMenu
+      - AuthMenu
   /menu/getMenu:
     post:
       parameters:
@@ -3219,8 +3219,8 @@ paths:
       - ApiKeyAuth: []
       summary: 获取用户动态路由
       tags:
-      - AuthorityMenu
-  /menu/getMenuAuthority:
+      - AuthMenu
+  /menu/getMenuAuth:
     post:
       consumes:
       - application/json
@@ -3230,7 +3230,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/request.GetAuthorityId'
+          $ref: '#/definitions/request.GetAuthId'
       produces:
       - application/json
       responses:
@@ -3250,7 +3250,7 @@ paths:
       - ApiKeyAuth: []
       summary: 获取指定角色menu
       tags:
-      - AuthorityMenu
+      - AuthMenu
   /menu/getMenuList:
     post:
       consumes:
@@ -3309,22 +3309,22 @@ paths:
       summary: 更新菜单
       tags:
       - Menu
-  /sysDictionary/createSysDictionary:
+  /sysDic/createSysDic:
     post:
       consumes:
       - application/json
       parameters:
-      - description: SysDictionary模型
+      - description: SysDic模型
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysDictionary'
+          $ref: '#/definitions/system.SysDic'
       produces:
       - application/json
       responses:
         "200":
-          description: 创建SysDictionary
+          description: 创建SysDic
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3334,25 +3334,25 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 创建SysDictionary
+      summary: 创建SysDic
       tags:
-      - SysDictionary
-  /sysDictionary/deleteSysDictionary:
+      - SysDic
+  /sysDic/deleteSysDic:
     delete:
       consumes:
       - application/json
       parameters:
-      - description: SysDictionary模型
+      - description: SysDic模型
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysDictionary'
+          $ref: '#/definitions/system.SysDic'
       produces:
       - application/json
       responses:
         "200":
-          description: 删除SysDictionary
+          description: 删除SysDic
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3362,10 +3362,10 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 删除SysDictionary
+      summary: 删除SysDic
       tags:
-      - SysDictionary
-  /sysDictionary/findSysDictionary:
+      - SysDic
+  /sysDic/findSysDic:
     get:
       consumes:
       - application/json
@@ -3402,7 +3402,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 用id查询SysDictionary
+          description: 用id查询SysDic
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3415,10 +3415,10 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 用id查询SysDictionary
+      summary: 用id查询SysDic
       tags:
-      - SysDictionary
-  /sysDictionary/getSysDictionaryList:
+      - SysDic
+  /sysDic/getSysDicList:
     get:
       consumes:
       - application/json
@@ -3426,7 +3426,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 分页获取SysDictionary列表,返回包括列表,总数,页码,每页数量
+          description: 分页获取SysDic列表,返回包括列表,总数,页码,每页数量
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3438,25 +3438,25 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 分页获取SysDictionary列表
+      summary: 分页获取SysDic列表
       tags:
-      - SysDictionary
-  /sysDictionary/updateSysDictionary:
+      - SysDic
+  /sysDic/updateSysDic:
     put:
       consumes:
       - application/json
       parameters:
-      - description: SysDictionary模型
+      - description: SysDic模型
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysDictionary'
+          $ref: '#/definitions/system.SysDic'
       produces:
       - application/json
       responses:
         "200":
-          description: 更新SysDictionary
+          description: 更新SysDic
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3466,25 +3466,25 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 更新SysDictionary
+      summary: 更新SysDic
       tags:
-      - SysDictionary
-  /sysDictionaryDetail/createSysDictionaryDetail:
+      - SysDic
+  /sysDicDetail/createSysDicDetail:
     post:
       consumes:
       - application/json
       parameters:
-      - description: SysDictionaryDetail模型
+      - description: SysDicDetail模型
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysDictionaryDetail'
+          $ref: '#/definitions/system.SysDicDetail'
       produces:
       - application/json
       responses:
         "200":
-          description: 创建SysDictionaryDetail
+          description: 创建SysDicDetail
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3494,25 +3494,25 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 创建SysDictionaryDetail
+      summary: 创建SysDicDetail
       tags:
-      - SysDictionaryDetail
-  /sysDictionaryDetail/deleteSysDictionaryDetail:
+      - SysDicDetail
+  /sysDicDetail/deleteSysDicDetail:
     delete:
       consumes:
       - application/json
       parameters:
-      - description: SysDictionaryDetail模型
+      - description: SysDicDetail模型
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysDictionaryDetail'
+          $ref: '#/definitions/system.SysDicDetail'
       produces:
       - application/json
       responses:
         "200":
-          description: 删除SysDictionaryDetail
+          description: 删除SysDicDetail
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3522,10 +3522,10 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 删除SysDictionaryDetail
+      summary: 删除SysDicDetail
       tags:
-      - SysDictionaryDetail
-  /sysDictionaryDetail/findSysDictionaryDetail:
+      - SysDicDetail
+  /sysDicDetail/findSysDicDetail:
     get:
       consumes:
       - application/json
@@ -3556,7 +3556,7 @@ paths:
         type: boolean
       - description: 关联标记
         in: query
-        name: sysDictionaryID
+        name: sysDicID
         type: integer
       - description: 更新时间
         in: query
@@ -3570,7 +3570,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 用id查询SysDictionaryDetail
+          description: 用id查询SysDicDetail
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3583,10 +3583,10 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 用id查询SysDictionaryDetail
+      summary: 用id查询SysDicDetail
       tags:
-      - SysDictionaryDetail
-  /sysDictionaryDetail/getSysDictionaryDetailList:
+      - SysDicDetail
+  /sysDicDetail/getSysDicDetailList:
     get:
       consumes:
       - application/json
@@ -3629,7 +3629,7 @@ paths:
         type: boolean
       - description: 关联标记
         in: query
-        name: sysDictionaryID
+        name: sysDicID
         type: integer
       - description: 更新时间
         in: query
@@ -3643,7 +3643,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 分页获取SysDictionaryDetail列表,返回包括列表,总数,页码,每页数量
+          description: 分页获取SysDicDetail列表,返回包括列表,总数,页码,每页数量
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3655,25 +3655,25 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 分页获取SysDictionaryDetail列表
+      summary: 分页获取SysDicDetail列表
       tags:
-      - SysDictionaryDetail
-  /sysDictionaryDetail/updateSysDictionaryDetail:
+      - SysDicDetail
+  /sysDicDetail/updateSysDicDetail:
     put:
       consumes:
       - application/json
       parameters:
-      - description: 更新SysDictionaryDetail
+      - description: 更新SysDicDetail
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysDictionaryDetail'
+          $ref: '#/definitions/system.SysDicDetail'
       produces:
       - application/json
       responses:
         "200":
-          description: 更新SysDictionaryDetail
+          description: 更新SysDicDetail
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3683,25 +3683,25 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 更新SysDictionaryDetail
+      summary: 更新SysDicDetail
       tags:
-      - SysDictionaryDetail
-  /sysOperationRecord/createSysOperationRecord:
+      - SysDicDetail
+  /sysRecord/createSysRecord:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 创建SysOperationRecord
+      - description: 创建SysRecord
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysOperationRecord'
+          $ref: '#/definitions/system.SysRecord'
       produces:
       - application/json
       responses:
         "200":
-          description: 创建SysOperationRecord
+          description: 创建SysRecord
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3711,25 +3711,25 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 创建SysOperationRecord
+      summary: 创建SysRecord
       tags:
-      - SysOperationRecord
-  /sysOperationRecord/deleteSysOperationRecord:
+      - SysRecord
+  /sysRecord/deleteSysRecord:
     delete:
       consumes:
       - application/json
       parameters:
-      - description: SysOperationRecord模型
+      - description: SysRecord模型
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysOperationRecord'
+          $ref: '#/definitions/system.SysRecord'
       produces:
       - application/json
       responses:
         "200":
-          description: 删除SysOperationRecord
+          description: 删除SysRecord
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3739,15 +3739,15 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 删除SysOperationRecord
+      summary: 删除SysRecord
       tags:
-      - SysOperationRecord
-  /sysOperationRecord/deleteSysOperationRecordByIds:
+      - SysRecord
+  /sysRecord/deleteSysRecordByIds:
     delete:
       consumes:
       - application/json
       parameters:
-      - description: 批量删除SysOperationRecord
+      - description: 批量删除SysRecord
         in: body
         name: data
         required: true
@@ -3757,7 +3757,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 批量删除SysOperationRecord
+          description: 批量删除SysRecord
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3767,10 +3767,10 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 批量删除SysOperationRecord
+      summary: 批量删除SysRecord
       tags:
-      - SysOperationRecord
-  /sysOperationRecord/findSysOperationRecord:
+      - SysRecord
+  /sysRecord/findSysRecord:
     get:
       consumes:
       - application/json
@@ -3831,7 +3831,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 用id查询SysOperationRecord
+          description: 用id查询SysRecord
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3844,10 +3844,10 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 用id查询SysOperationRecord
+      summary: 用id查询SysRecord
       tags:
-      - SysOperationRecord
-  /sysOperationRecord/getSysOperationRecordList:
+      - SysRecord
+  /sysRecord/getSysRecordList:
     get:
       consumes:
       - application/json
@@ -3920,7 +3920,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 分页获取SysOperationRecord列表,返回包括列表,总数,页码,每页数量
+          description: 分页获取SysRecord列表,返回包括列表,总数,页码,每页数量
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -3932,9 +3932,9 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 分页获取SysOperationRecord列表
+      summary: 分页获取SysRecord列表
       tags:
-      - SysOperationRecord
+      - SysRecord
   /system/getServerInfo:
     post:
       produces:
@@ -4242,7 +4242,7 @@ paths:
       summary: 设置用户权限
       tags:
       - SysUser
-  /user/setUserAuthority:
+  /user/setUserAuth:
     post:
       consumes:
       - application/json

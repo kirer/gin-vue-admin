@@ -3,21 +3,19 @@ package system
 import "kirer.cn/server/service"
 
 type ApiGroup struct {
-	DBApi
 	JwtApi
 	BaseApi
 	SystemApi
 	CasbinApi
 	AutoCodeApi
 	SystemApiApi
-	AuthorityApi
-	DictionaryApi
-	AuthorityMenuApi
-	OperationRecordApi
+	AuthApi
+	DicApi
+	AuthMenuApi
+	RecordApi
 	AutoCodeHistoryApi
-	DictionaryDetailApi
-	AuthorityBtnApi
-	ChatGptApi
+	DicDetailApi
+	AuthBtnApi
 }
 
 var (
@@ -25,16 +23,14 @@ var (
 	jwtService              = service.ServiceGroupApp.SystemServiceGroup.JwtService
 	menuService             = service.ServiceGroupApp.SystemServiceGroup.MenuService
 	userService             = service.ServiceGroupApp.SystemServiceGroup.UserService
-	initDBService           = service.ServiceGroupApp.SystemServiceGroup.InitDBService
 	casbinService           = service.ServiceGroupApp.SystemServiceGroup.CasbinService
 	autoCodeService         = service.ServiceGroupApp.SystemServiceGroup.AutoCodeService
 	baseMenuService         = service.ServiceGroupApp.SystemServiceGroup.BaseMenuService
-	authorityService        = service.ServiceGroupApp.SystemServiceGroup.AuthorityService
-	dictionaryService       = service.ServiceGroupApp.SystemServiceGroup.DictionaryService
+	authService             = service.ServiceGroupApp.SystemServiceGroup.AuthService
+	dictionaryService       = service.ServiceGroupApp.SystemServiceGroup.DicService
 	systemConfigService     = service.ServiceGroupApp.SystemServiceGroup.SystemConfigService
-	operationRecordService  = service.ServiceGroupApp.SystemServiceGroup.OperationRecordService
+	operationRecordService  = service.ServiceGroupApp.SystemServiceGroup.RecordService
 	autoCodeHistoryService  = service.ServiceGroupApp.SystemServiceGroup.AutoCodeHistoryService
-	dictionaryDetailService = service.ServiceGroupApp.SystemServiceGroup.DictionaryDetailService
-	authorityBtnService     = service.ServiceGroupApp.SystemServiceGroup.AuthorityBtnService
-	chatGptService          = service.ServiceGroupApp.SystemServiceGroup.ChatGptService
+	dictionaryDetailService = service.ServiceGroupApp.SystemServiceGroup.DicDetailService
+	authBtnService          = service.ServiceGroupApp.SystemServiceGroup.AuthBtnService
 )

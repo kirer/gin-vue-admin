@@ -58,26 +58,23 @@ func Routers() *gin.Engine {
 	}
 	{
 		systemRouter.InitBaseRouter(PublicGroup) // 注册基础功能路由 不做鉴权
-		systemRouter.InitInitRouter(PublicGroup) // 自动初始化相关
 	}
 	PrivateGroup := Router.Group(global.CONFIG.System.RouterPrefix)
 	PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
 	{
-		systemRouter.InitApiRouter(PrivateGroup, PublicGroup)    // 注册功能api路由
-		systemRouter.InitJwtRouter(PrivateGroup)                 // jwt相关路由
-		systemRouter.InitUserRouter(PrivateGroup)                // 注册用户路由
-		systemRouter.InitMenuRouter(PrivateGroup)                // 注册menu路由
-		systemRouter.InitSystemRouter(PrivateGroup)              // system相关路由
-		systemRouter.InitCasbinRouter(PrivateGroup)              // 权限相关路由
-		systemRouter.InitAutoCodeRouter(PrivateGroup)            // 创建自动化代码
-		systemRouter.InitAuthorityRouter(PrivateGroup)           // 注册角色路由
-		systemRouter.InitSysDictionaryRouter(PrivateGroup)       // 字典管理
-		systemRouter.InitAutoCodeHistoryRouter(PrivateGroup)     // 自动化代码历史
-		systemRouter.InitSysOperationRecordRouter(PrivateGroup)  // 操作记录
-		systemRouter.InitSysDictionaryDetailRouter(PrivateGroup) // 字典详情管理
-		systemRouter.InitAuthorityBtnRouterRouter(PrivateGroup)  // 字典详情管理
-		systemRouter.InitChatGptRouter(PrivateGroup)             // chatGpt接口
-
+		systemRouter.InitApiRouter(PrivateGroup, PublicGroup) // 注册功能api路由
+		systemRouter.InitJwtRouter(PrivateGroup)              // jwt相关路由
+		systemRouter.InitUserRouter(PrivateGroup)             // 注册用户路由
+		systemRouter.InitMenuRouter(PrivateGroup)             // 注册menu路由
+		systemRouter.InitSystemRouter(PrivateGroup)           // system相关路由
+		systemRouter.InitCasbinRouter(PrivateGroup)           // 权限相关路由
+		systemRouter.InitAutoCodeRouter(PrivateGroup)         // 创建自动化代码
+		systemRouter.InitAuthRouter(PrivateGroup)             // 注册角色路由
+		systemRouter.InitSysDicRouter(PrivateGroup)           // 字典管理
+		systemRouter.InitAutoCodeHistoryRouter(PrivateGroup)  // 自动化代码历史
+		systemRouter.InitSysRecordRouter(PrivateGroup)        // 操作记录
+		systemRouter.InitSysDicDetailRouter(PrivateGroup)     // 字典详情管理
+		systemRouter.InitAuthBtnRouterRouter(PrivateGroup)    // 字典详情管理
 	}
 
 	global.LOG.Info("router register success")

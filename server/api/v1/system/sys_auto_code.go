@@ -102,13 +102,14 @@ func (autoApi *AutoCodeApi) CreateTemp(c *gin.Context) {
 // @Success   200  {object}  response.Response{data=map[string]interface{},msg=string}  "获取当前所有数据库"
 // @Router    /autoCode/getDatabase [get]
 func (autoApi *AutoCodeApi) GetDB(c *gin.Context) {
+
 	dbs, err := autoCodeService.Database().GetDB()
 	var dbList []map[string]interface{}
 	var item = make(map[string]interface{})
-	// item["aliasName"] = db.AliasName
-	// item["dbName"] = db.Dbname
-	// item["disable"] = db.Disable
-	// item["dbtype"] = db.Type
+	item["aliasName"] = ""
+	item["dbName"] = global.CONFIG.Mysql.Dbname
+	item["disable"] = false
+	item["dbtype"] = "mysql"
 	dbList = append(dbList, item)
 	if err != nil {
 		global.LOG.Error("获取失败!", zap.Error(err))

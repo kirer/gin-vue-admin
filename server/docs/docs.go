@@ -395,7 +395,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/authority/copyAuthority": {
+        "/auth/copyAuth": {
             "post": {
                 "security": [
                     {
@@ -409,7 +409,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Authority"
+                    "Auth"
                 ],
                 "summary": "拷贝角色",
                 "parameters": [
@@ -419,7 +419,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/response.SysAuthorityCopyResponse"
+                            "$ref": "#/definitions/response.SysAuthCopyResponse"
                         }
                     }
                 ],
@@ -435,7 +435,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/response.SysAuthorityResponse"
+                                            "$ref": "#/definitions/response.SysAuthResponse"
                                         },
                                         "msg": {
                                             "type": "string"
@@ -448,7 +448,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/authority/createAuthority": {
+        "/auth/createAuth": {
             "post": {
                 "security": [
                     {
@@ -462,7 +462,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Authority"
+                    "Auth"
                 ],
                 "summary": "创建角色",
                 "parameters": [
@@ -472,7 +472,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysAuthority"
+                            "$ref": "#/definitions/system.SysAuth"
                         }
                     }
                 ],
@@ -488,7 +488,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/response.SysAuthorityResponse"
+                                            "$ref": "#/definitions/response.SysAuthResponse"
                                         },
                                         "msg": {
                                             "type": "string"
@@ -501,7 +501,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/authority/deleteAuthority": {
+        "/auth/deleteAuth": {
             "post": {
                 "security": [
                     {
@@ -515,7 +515,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Authority"
+                    "Auth"
                 ],
                 "summary": "删除角色",
                 "parameters": [
@@ -525,7 +525,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysAuthority"
+                            "$ref": "#/definitions/system.SysAuth"
                         }
                     }
                 ],
@@ -551,7 +551,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/authority/getAuthorityList": {
+        "/auth/getAuthList": {
             "post": {
                 "security": [
                     {
@@ -565,7 +565,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Authority"
+                    "Auth"
                 ],
                 "summary": "分页获取角色列表",
                 "parameters": [
@@ -604,7 +604,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/authority/setDataAuthority": {
+        "/auth/setDataAuth": {
             "post": {
                 "security": [
                     {
@@ -618,7 +618,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Authority"
+                    "Auth"
                 ],
                 "summary": "设置角色资源权限",
                 "parameters": [
@@ -628,7 +628,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysAuthority"
+                            "$ref": "#/definitions/system.SysAuth"
                         }
                     }
                 ],
@@ -654,7 +654,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/authority/updateAuthority": {
+        "/auth/updateAuth": {
             "post": {
                 "security": [
                     {
@@ -668,7 +668,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Authority"
+                    "Auth"
                 ],
                 "summary": "更新角色信息",
                 "parameters": [
@@ -678,7 +678,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysAuthority"
+                            "$ref": "#/definitions/system.SysAuth"
                         }
                     }
                 ],
@@ -694,7 +694,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/response.SysAuthorityResponse"
+                                            "$ref": "#/definitions/response.SysAuthResponse"
                                         },
                                         "msg": {
                                             "type": "string"
@@ -707,7 +707,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/authorityBtn/canRemoveAuthorityBtn": {
+        "/authBtn/canRemoveAuthBtn": {
             "post": {
                 "security": [
                     {
@@ -721,7 +721,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "AuthorityBtn"
+                    "AuthBtn"
                 ],
                 "summary": "设置权限按钮",
                 "responses": {
@@ -746,7 +746,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/authorityBtn/getAuthorityBtn": {
+        "/authBtn/getAuthBtn": {
             "post": {
                 "security": [
                     {
@@ -760,7 +760,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "AuthorityBtn"
+                    "AuthBtn"
                 ],
                 "summary": "获取权限按钮",
                 "parameters": [
@@ -770,7 +770,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.SysAuthorityBtnReq"
+                            "$ref": "#/definitions/request.SysAuthBtnReq"
                         }
                     }
                 ],
@@ -786,7 +786,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/response.SysAuthorityBtnRes"
+                                            "$ref": "#/definitions/response.SysAuthBtnRes"
                                         },
                                         "msg": {
                                             "type": "string"
@@ -799,7 +799,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/authorityBtn/setAuthorityBtn": {
+        "/authBtn/setAuthBtn": {
             "post": {
                 "security": [
                     {
@@ -813,7 +813,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "AuthorityBtn"
+                    "AuthBtn"
                 ],
                 "summary": "设置权限按钮",
                 "parameters": [
@@ -823,7 +823,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.SysAuthorityBtnReq"
+                            "$ref": "#/definitions/request.SysAuthBtnReq"
                         }
                     }
                 ],
@@ -1727,7 +1727,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/casbin/getPolicyPathByAuthorityId": {
+        "/casbin/getPolicyPathByAuthId": {
             "post": {
                 "security": [
                     {
@@ -1825,7 +1825,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "管理角色ID",
-                        "name": "sysUserAuthorityID",
+                        "name": "sysUserAuthID",
                         "in": "query"
                     },
                     {
@@ -2595,7 +2595,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/menu/addMenuAuthority": {
+        "/menu/addMenuAuth": {
             "post": {
                 "security": [
                     {
@@ -2609,7 +2609,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "AuthorityMenu"
+                    "AuthMenu"
                 ],
                 "summary": "增加menu和角色关联关系",
                 "parameters": [
@@ -2619,7 +2619,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.AddMenuAuthorityInfo"
+                            "$ref": "#/definitions/request.AddMenuAuthInfo"
                         }
                     }
                 ],
@@ -2759,7 +2759,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "AuthorityMenu"
+                    "AuthMenu"
                 ],
                 "summary": "获取用户动态路由",
                 "parameters": [
@@ -2809,7 +2809,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "AuthorityMenu"
+                    "AuthMenu"
                 ],
                 "summary": "获取用户动态路由",
                 "parameters": [
@@ -2848,7 +2848,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/menu/getMenuAuthority": {
+        "/menu/getMenuAuth": {
             "post": {
                 "security": [
                     {
@@ -2862,7 +2862,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "AuthorityMenu"
+                    "AuthMenu"
                 ],
                 "summary": "获取指定角色menu",
                 "parameters": [
@@ -2872,7 +2872,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.GetAuthorityId"
+                            "$ref": "#/definitions/request.GetAuthId"
                         }
                     }
                 ],
@@ -3005,7 +3005,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysDictionary/createSysDictionary": {
+        "/sysDic/createSysDic": {
             "post": {
                 "security": [
                     {
@@ -3019,23 +3019,23 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysDictionary"
+                    "SysDic"
                 ],
-                "summary": "创建SysDictionary",
+                "summary": "创建SysDic",
                 "parameters": [
                     {
-                        "description": "SysDictionary模型",
+                        "description": "SysDic模型",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysDictionary"
+                            "$ref": "#/definitions/system.SysDic"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "创建SysDictionary",
+                        "description": "创建SysDic",
                         "schema": {
                             "allOf": [
                                 {
@@ -3055,7 +3055,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysDictionary/deleteSysDictionary": {
+        "/sysDic/deleteSysDic": {
             "delete": {
                 "security": [
                     {
@@ -3069,23 +3069,23 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysDictionary"
+                    "SysDic"
                 ],
-                "summary": "删除SysDictionary",
+                "summary": "删除SysDic",
                 "parameters": [
                     {
-                        "description": "SysDictionary模型",
+                        "description": "SysDic模型",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysDictionary"
+                            "$ref": "#/definitions/system.SysDic"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "删除SysDictionary",
+                        "description": "删除SysDic",
                         "schema": {
                             "allOf": [
                                 {
@@ -3105,7 +3105,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysDictionary/findSysDictionary": {
+        "/sysDic/findSysDic": {
             "get": {
                 "security": [
                     {
@@ -3119,9 +3119,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysDictionary"
+                    "SysDic"
                 ],
-                "summary": "用id查询SysDictionary",
+                "summary": "用id查询SysDic",
                 "parameters": [
                     {
                         "type": "string",
@@ -3168,7 +3168,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "用id查询SysDictionary",
+                        "description": "用id查询SysDic",
                         "schema": {
                             "allOf": [
                                 {
@@ -3192,7 +3192,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysDictionary/getSysDictionaryList": {
+        "/sysDic/getSysDicList": {
             "get": {
                 "security": [
                     {
@@ -3206,12 +3206,12 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysDictionary"
+                    "SysDic"
                 ],
-                "summary": "分页获取SysDictionary列表",
+                "summary": "分页获取SysDic列表",
                 "responses": {
                     "200": {
-                        "description": "分页获取SysDictionary列表,返回包括列表,总数,页码,每页数量",
+                        "description": "分页获取SysDic列表,返回包括列表,总数,页码,每页数量",
                         "schema": {
                             "allOf": [
                                 {
@@ -3234,7 +3234,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysDictionary/updateSysDictionary": {
+        "/sysDic/updateSysDic": {
             "put": {
                 "security": [
                     {
@@ -3248,23 +3248,23 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysDictionary"
+                    "SysDic"
                 ],
-                "summary": "更新SysDictionary",
+                "summary": "更新SysDic",
                 "parameters": [
                     {
-                        "description": "SysDictionary模型",
+                        "description": "SysDic模型",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysDictionary"
+                            "$ref": "#/definitions/system.SysDic"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "更新SysDictionary",
+                        "description": "更新SysDic",
                         "schema": {
                             "allOf": [
                                 {
@@ -3284,7 +3284,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysDictionaryDetail/createSysDictionaryDetail": {
+        "/sysDicDetail/createSysDicDetail": {
             "post": {
                 "security": [
                     {
@@ -3298,23 +3298,23 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysDictionaryDetail"
+                    "SysDicDetail"
                 ],
-                "summary": "创建SysDictionaryDetail",
+                "summary": "创建SysDicDetail",
                 "parameters": [
                     {
-                        "description": "SysDictionaryDetail模型",
+                        "description": "SysDicDetail模型",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysDictionaryDetail"
+                            "$ref": "#/definitions/system.SysDicDetail"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "创建SysDictionaryDetail",
+                        "description": "创建SysDicDetail",
                         "schema": {
                             "allOf": [
                                 {
@@ -3334,7 +3334,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysDictionaryDetail/deleteSysDictionaryDetail": {
+        "/sysDicDetail/deleteSysDicDetail": {
             "delete": {
                 "security": [
                     {
@@ -3348,23 +3348,23 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysDictionaryDetail"
+                    "SysDicDetail"
                 ],
-                "summary": "删除SysDictionaryDetail",
+                "summary": "删除SysDicDetail",
                 "parameters": [
                     {
-                        "description": "SysDictionaryDetail模型",
+                        "description": "SysDicDetail模型",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysDictionaryDetail"
+                            "$ref": "#/definitions/system.SysDicDetail"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "删除SysDictionaryDetail",
+                        "description": "删除SysDicDetail",
                         "schema": {
                             "allOf": [
                                 {
@@ -3384,7 +3384,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysDictionaryDetail/findSysDictionaryDetail": {
+        "/sysDicDetail/findSysDicDetail": {
             "get": {
                 "security": [
                     {
@@ -3398,9 +3398,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysDictionaryDetail"
+                    "SysDicDetail"
                 ],
-                "summary": "用id查询SysDictionaryDetail",
+                "summary": "用id查询SysDicDetail",
                 "parameters": [
                     {
                         "type": "string",
@@ -3441,7 +3441,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "关联标记",
-                        "name": "sysDictionaryID",
+                        "name": "sysDicID",
                         "in": "query"
                     },
                     {
@@ -3459,7 +3459,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "用id查询SysDictionaryDetail",
+                        "description": "用id查询SysDicDetail",
                         "schema": {
                             "allOf": [
                                 {
@@ -3483,7 +3483,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysDictionaryDetail/getSysDictionaryDetailList": {
+        "/sysDicDetail/getSysDicDetailList": {
             "get": {
                 "security": [
                     {
@@ -3497,9 +3497,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysDictionaryDetail"
+                    "SysDicDetail"
                 ],
-                "summary": "分页获取SysDictionaryDetail列表",
+                "summary": "分页获取SysDicDetail列表",
                 "parameters": [
                     {
                         "type": "string",
@@ -3558,7 +3558,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "关联标记",
-                        "name": "sysDictionaryID",
+                        "name": "sysDicID",
                         "in": "query"
                     },
                     {
@@ -3576,7 +3576,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "分页获取SysDictionaryDetail列表,返回包括列表,总数,页码,每页数量",
+                        "description": "分页获取SysDicDetail列表,返回包括列表,总数,页码,每页数量",
                         "schema": {
                             "allOf": [
                                 {
@@ -3599,7 +3599,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysDictionaryDetail/updateSysDictionaryDetail": {
+        "/sysDicDetail/updateSysDicDetail": {
             "put": {
                 "security": [
                     {
@@ -3613,23 +3613,23 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysDictionaryDetail"
+                    "SysDicDetail"
                 ],
-                "summary": "更新SysDictionaryDetail",
+                "summary": "更新SysDicDetail",
                 "parameters": [
                     {
-                        "description": "更新SysDictionaryDetail",
+                        "description": "更新SysDicDetail",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysDictionaryDetail"
+                            "$ref": "#/definitions/system.SysDicDetail"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "更新SysDictionaryDetail",
+                        "description": "更新SysDicDetail",
                         "schema": {
                             "allOf": [
                                 {
@@ -3649,7 +3649,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysOperationRecord/createSysOperationRecord": {
+        "/sysRecord/createSysRecord": {
             "post": {
                 "security": [
                     {
@@ -3663,23 +3663,23 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysOperationRecord"
+                    "SysRecord"
                 ],
-                "summary": "创建SysOperationRecord",
+                "summary": "创建SysRecord",
                 "parameters": [
                     {
-                        "description": "创建SysOperationRecord",
+                        "description": "创建SysRecord",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysOperationRecord"
+                            "$ref": "#/definitions/system.SysRecord"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "创建SysOperationRecord",
+                        "description": "创建SysRecord",
                         "schema": {
                             "allOf": [
                                 {
@@ -3699,7 +3699,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysOperationRecord/deleteSysOperationRecord": {
+        "/sysRecord/deleteSysRecord": {
             "delete": {
                 "security": [
                     {
@@ -3713,23 +3713,23 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysOperationRecord"
+                    "SysRecord"
                 ],
-                "summary": "删除SysOperationRecord",
+                "summary": "删除SysRecord",
                 "parameters": [
                     {
-                        "description": "SysOperationRecord模型",
+                        "description": "SysRecord模型",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.SysOperationRecord"
+                            "$ref": "#/definitions/system.SysRecord"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "删除SysOperationRecord",
+                        "description": "删除SysRecord",
                         "schema": {
                             "allOf": [
                                 {
@@ -3749,7 +3749,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysOperationRecord/deleteSysOperationRecordByIds": {
+        "/sysRecord/deleteSysRecordByIds": {
             "delete": {
                 "security": [
                     {
@@ -3763,12 +3763,12 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysOperationRecord"
+                    "SysRecord"
                 ],
-                "summary": "批量删除SysOperationRecord",
+                "summary": "批量删除SysRecord",
                 "parameters": [
                     {
-                        "description": "批量删除SysOperationRecord",
+                        "description": "批量删除SysRecord",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -3779,7 +3779,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "批量删除SysOperationRecord",
+                        "description": "批量删除SysRecord",
                         "schema": {
                             "allOf": [
                                 {
@@ -3799,7 +3799,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysOperationRecord/findSysOperationRecord": {
+        "/sysRecord/findSysRecord": {
             "get": {
                 "security": [
                     {
@@ -3813,9 +3813,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysOperationRecord"
+                    "SysRecord"
                 ],
-                "summary": "用id查询SysOperationRecord",
+                "summary": "用id查询SysRecord",
                 "parameters": [
                     {
                         "type": "string",
@@ -3898,7 +3898,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "用id查询SysOperationRecord",
+                        "description": "用id查询SysRecord",
                         "schema": {
                             "allOf": [
                                 {
@@ -3922,7 +3922,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/sysOperationRecord/getSysOperationRecordList": {
+        "/sysRecord/getSysRecordList": {
             "get": {
                 "security": [
                     {
@@ -3936,9 +3936,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SysOperationRecord"
+                    "SysRecord"
                 ],
-                "summary": "分页获取SysOperationRecord列表",
+                "summary": "分页获取SysRecord列表",
                 "parameters": [
                     {
                         "type": "string",
@@ -4039,7 +4039,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "分页获取SysOperationRecord列表,返回包括列表,总数,页码,每页数量",
+                        "description": "分页获取SysRecord列表,返回包括列表,总数,页码,每页数量",
                         "schema": {
                             "allOf": [
                                 {
@@ -4613,7 +4613,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/setUserAuthority": {
+        "/user/setUserAuth": {
             "post": {
                 "security": [
                     {
@@ -5666,7 +5666,7 @@ const docTemplate = `{
                         }
                     ]
                 },
-                "sysUserAuthorityID": {
+                "sysUserAuthID": {
                     "description": "管理角色ID",
                     "type": "integer"
                 },
@@ -5810,10 +5810,10 @@ const docTemplate = `{
                 }
             }
         },
-        "request.AddMenuAuthorityInfo": {
+        "request.AddMenuAuthInfo": {
             "type": "object",
             "properties": {
-                "authorityId": {
+                "authId": {
                     "description": "角色ID",
                     "type": "integer"
                 },
@@ -5828,7 +5828,7 @@ const docTemplate = `{
         "request.CasbinInReceive": {
             "type": "object",
             "properties": {
-                "authorityId": {
+                "authId": {
                     "description": "权限id",
                     "type": "integer"
                 },
@@ -5869,10 +5869,10 @@ const docTemplate = `{
         "request.Empty": {
             "type": "object"
         },
-        "request.GetAuthorityId": {
+        "request.GetAuthId": {
             "type": "object",
             "properties": {
-                "authorityId": {
+                "authId": {
                     "description": "角色ID",
                     "type": "integer"
                 }
@@ -5975,11 +5975,11 @@ const docTemplate = `{
         "request.Register": {
             "type": "object",
             "properties": {
-                "authorityId": {
+                "authId": {
                     "type": "string",
                     "example": "int 角色id"
                 },
-                "authorityIds": {
+                "authIds": {
                     "type": "string",
                     "example": "[]uint 角色id"
                 },
@@ -6082,7 +6082,7 @@ const docTemplate = `{
         "request.SetUserAuth": {
             "type": "object",
             "properties": {
-                "authorityId": {
+                "authId": {
                     "description": "角色ID",
                     "type": "integer"
                 }
@@ -6091,7 +6091,7 @@ const docTemplate = `{
         "request.SetUserAuthorities": {
             "type": "object",
             "properties": {
-                "authorityIds": {
+                "authIds": {
                     "description": "角色ID",
                     "type": "array",
                     "items": {
@@ -6103,10 +6103,10 @@ const docTemplate = `{
                 }
             }
         },
-        "request.SysAuthorityBtnReq": {
+        "request.SysAuthBtnReq": {
             "type": "object",
             "properties": {
-                "authorityId": {
+                "authId": {
                     "type": "integer"
                 },
                 "menuID": {
@@ -6257,7 +6257,7 @@ const docTemplate = `{
                 }
             }
         },
-        "response.SysAuthorityBtnRes": {
+        "response.SysAuthBtnRes": {
             "type": "object",
             "properties": {
                 "selected": {
@@ -6268,23 +6268,23 @@ const docTemplate = `{
                 }
             }
         },
-        "response.SysAuthorityCopyResponse": {
+        "response.SysAuthCopyResponse": {
             "type": "object",
             "properties": {
-                "authority": {
-                    "$ref": "#/definitions/system.SysAuthority"
+                "auth": {
+                    "$ref": "#/definitions/system.SysAuth"
                 },
-                "oldAuthorityId": {
+                "oldAuthId": {
                     "description": "旧角色ID",
                     "type": "integer"
                 }
             }
         },
-        "response.SysAuthorityResponse": {
+        "response.SysAuthResponse": {
             "type": "object",
             "properties": {
-                "authority": {
-                    "$ref": "#/definitions/system.SysAuthority"
+                "auth": {
+                    "$ref": "#/definitions/system.SysAuth"
                 }
             }
         },
@@ -6526,31 +6526,31 @@ const docTemplate = `{
                 }
             }
         },
-        "system.SysAuthority": {
+        "system.SysAuth": {
             "type": "object",
             "properties": {
-                "authorityId": {
+                "authId": {
                     "description": "角色ID",
                     "type": "integer"
                 },
-                "authorityName": {
+                "authName": {
                     "description": "角色名",
                     "type": "string"
                 },
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/system.SysAuthority"
+                        "$ref": "#/definitions/system.SysAuth"
                     }
                 },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
                 },
-                "dataAuthorityId": {
+                "dataAuthId": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/system.SysAuthority"
+                        "$ref": "#/definitions/system.SysAuth"
                     }
                 },
                 "defaultRouter": {
@@ -6605,10 +6605,10 @@ const docTemplate = `{
         "system.SysBaseMenu": {
             "type": "object",
             "properties": {
-                "authoritys": {
+                "auths": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/system.SysAuthority"
+                        "$ref": "#/definitions/system.SysAuth"
                     }
                 },
                 "children": {
@@ -6733,7 +6733,7 @@ const docTemplate = `{
                 }
             }
         },
-        "system.SysDictionary": {
+        "system.SysDic": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -6756,10 +6756,10 @@ const docTemplate = `{
                     "description": "状态",
                     "type": "boolean"
                 },
-                "sysDictionaryDetails": {
+                "sysDicDetails": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/system.SysDictionaryDetail"
+                        "$ref": "#/definitions/system.SysDicDetail"
                     }
                 },
                 "type": {
@@ -6772,7 +6772,7 @@ const docTemplate = `{
                 }
             }
         },
-        "system.SysDictionaryDetail": {
+        "system.SysDicDetail": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -6799,7 +6799,7 @@ const docTemplate = `{
                     "description": "启用状态",
                     "type": "boolean"
                 },
-                "sysDictionaryID": {
+                "sysDicID": {
                     "description": "关联标记",
                     "type": "integer"
                 },
@@ -6816,10 +6816,10 @@ const docTemplate = `{
         "system.SysMenu": {
             "type": "object",
             "properties": {
-                "authoritys": {
+                "auths": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/system.SysAuthority"
+                        "$ref": "#/definitions/system.SysAuth"
                     }
                 },
                 "btns": {
@@ -6895,7 +6895,7 @@ const docTemplate = `{
                 }
             }
         },
-        "system.SysOperationRecord": {
+        "system.SysRecord": {
             "type": "object",
             "properties": {
                 "agent": {
@@ -6965,13 +6965,13 @@ const docTemplate = `{
                 "authorities": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/system.SysAuthority"
+                        "$ref": "#/definitions/system.SysAuth"
                     }
                 },
-                "authority": {
-                    "$ref": "#/definitions/system.SysAuthority"
+                "auth": {
+                    "$ref": "#/definitions/system.SysAuth"
                 },
-                "authorityId": {
+                "authId": {
                     "description": "用户角色ID",
                     "type": "integer"
                 },

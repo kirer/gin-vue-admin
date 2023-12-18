@@ -11,7 +11,7 @@ type {{.StructName}}Router struct {
 
 // Init{{.StructName}}Router 初始化 {{.Description}} 路由信息
 func (s *{{.StructName}}Router) Init{{.StructName}}Router(Router *gin.RouterGroup) {
-	{{.Abbreviation}}Router := Router.Group("{{.Abbreviation}}").Use(middleware.OperationRecord())
+	{{.Abbreviation}}Router := Router.Group("{{.Abbreviation}}").Use(middleware.Record())
 	{{.Abbreviation}}RouterWithoutRecord := Router.Group("{{.Abbreviation}}")
 	var {{.Abbreviation}}Api = v1.ApiGroupApp.{{.PackageT}}ApiGroup.{{.StructName}}Api
 	{

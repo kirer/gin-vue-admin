@@ -9,7 +9,7 @@ import (
 type EmailRouter struct{}
 
 func (s *EmailRouter) InitEmailRouter(Router *gin.RouterGroup) {
-	emailRouter := Router.Use(middleware.OperationRecord())
+	emailRouter := Router.Use(middleware.Record())
 	EmailApi := api.ApiGroupApp.EmailApi.EmailTest
 	SendEmail := api.ApiGroupApp.EmailApi.SendEmail
 	{

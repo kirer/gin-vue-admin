@@ -27,44 +27,24 @@ type AutoCodeHistoryService struct{}
 
 var AutoCodeHistoryServiceApp = new(AutoCodeHistoryService)
 
-// CreateAutoCodeHistory 创建代码生成器历史记录
-// RouterPath : RouterPath@RouterString;RouterPath2@RouterString2
-// Author [SliverHorn](https://github.com/SliverHorn)
-// Author [songzhibin97](https://github.com/songzhibin97)
-func (autoCodeHistoryService *AutoCodeHistoryService) CreateAutoCodeHistory(meta, structName, structCNName, autoCodePath string, injectionMeta string, tableName string, apiIds string, Package string, BusinessDB string) error {
-	return global.DB.Create(&system.SysAutoCodeHistory{
-		Package:       Package,
-		RequestMeta:   meta,
-		AutoCodePath:  autoCodePath,
-		InjectionMeta: injectionMeta,
-		StructName:    structName,
-		StructCNName:  structCNName,
-		TableName:     tableName,
-		ApiIDs:        apiIds,
-		BusinessDB:    BusinessDB,
-	}).Error
-}
-
-// First 根据id获取代码生成器历史的数据
-// Author [SliverHorn](https://github.com/SliverHorn)
-// Author [songzhibin97](https://github.com/songzhibin97)
-func (autoCodeHistoryService *AutoCodeHistoryService) First(info *request.GetById) (string, error) {
+func (autoCodeHistoryService *AutoCodeHistoryService) Get(data *request.GetById) (string, error) {
 	var meta string
-	return meta, global.DB.Model(system.SysAutoCodeHistory{}).Select("request_meta").Where("id = ?", info.Uint()).First(&meta).Error
+	return meta, global.DB.Model(system.SysAutoCodeHistory{}).Select("request_meta").Where("id = ?", data.Uint()).First(&meta).Error
 }
 
-// Repeat 检测重复
-// Author [SliverHorn](https://github.com/SliverHorn)
-// Author [songzhibin97](https://github.com/songzhibin97)
-func (autoCodeHistoryService *AutoCodeHistoryService) Repeat(businessDB, structName, Package string) bool {
-	var count int64
-	global.DB.Model(&system.SysAutoCodeHistory{}).Where("business_db = ? and struct_name = ? and package = ? and flag = 0", businessDB, structName, Package).Count(&count)
-	return count > 0
+func (autoCodeHistoryService *AutoCodeHistoryService) List(info request.PageInfo) (list []response.AutoCodeHistory, total int64, err error) {
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
+	db := global.DB.Model(&system.SysAutoCodeHistory{})
+	var entities []response.AutoCodeHistory
+	err = db.Count(&total).Error
+	if err != nil {
+		return nil, total, err
+	}
+	err = db.Limit(limit).Offset(offset).Order("updated_at desc").Find(&entities).Error
+	return entities, total, err
 }
 
-// RollBack 回滚
-// Author [SliverHorn](https://github.com/SliverHorn)
-// Author [songzhibin97](https://github.com/songzhibin97)
 func (autoCodeHistoryService *AutoCodeHistoryService) RollBack(info *systemReq.RollBack) error {
 	md := system.SysAutoCodeHistory{}
 	if err := global.DB.Where("id = ?", info.ID).First(&md).Error; err != nil {
@@ -81,13 +61,13 @@ func (autoCodeHistoryService *AutoCodeHistoryService) RollBack(info *systemReq.R
 		}
 		ids.Ids = append(ids.Ids, id)
 	}
-	err := ApiServiceApp.DeleteApisByIds(ids)
+	err := ApiServiceApp.Deletes(ids)
 	if err != nil {
 		global.LOG.Error("ClearTag DeleteApiByIds:", zap.Error(err))
 	}
 	// 删除表
 	if info.DeleteTable {
-		if err = AutoCodeServiceApp.DropTable(md.TableName); err != nil {
+		if err = AutoCodeServiceApp.DropTable(md.TableNames); err != nil {
 			global.LOG.Error("ClearTag DropTable:", zap.Error(err))
 		}
 	}
@@ -130,6 +110,41 @@ func (autoCodeHistoryService *AutoCodeHistoryService) RollBack(info *systemReq.R
 	return global.DB.Save(&md).Error
 }
 
+// CreateAutoCodeHistory 创建代码生成器历史记录
+// RouterPath : RouterPath@RouterString;RouterPath2@RouterString2
+// Author [SliverHorn](https://github.com/SliverHorn)
+// Author [songzhibin97](https://github.com/songzhibin97)
+func (autoCodeHistoryService *AutoCodeHistoryService) CreateAutoCodeHistory(meta, structName, structCNName, autoCodePath string, injectionMeta string, tableName string, apiIds string, Package string, BusinessDB string) error {
+	return global.DB.Create(&system.SysAutoCodeHistory{
+		Package:       Package,
+		RequestMeta:   meta,
+		AutoCodePath:  autoCodePath,
+		InjectionMeta: injectionMeta,
+		StructName:    structName,
+		StructCNName:  structCNName,
+		TableNames:    tableName,
+		ApiIDs:        apiIds,
+		BusinessDB:    BusinessDB,
+	}).Error
+}
+
+// First 根据id获取代码生成器历史的数据
+// Author [SliverHorn](https://github.com/SliverHorn)
+// Author [songzhibin97](https://github.com/songzhibin97)
+
+// Repeat 检测重复
+// Author [SliverHorn](https://github.com/SliverHorn)
+// Author [songzhibin97](https://github.com/songzhibin97)
+func (autoCodeHistoryService *AutoCodeHistoryService) Repeat(businessDB, structName, Package string) bool {
+	var count int64
+	global.DB.Model(&system.SysAutoCodeHistory{}).Where("business_db = ? and struct_name = ? and package = ? and flag = 0", businessDB, structName, Package).Count(&count)
+	return count > 0
+}
+
+// RollBack 回滚
+// Author [SliverHorn](https://github.com/SliverHorn)
+// Author [songzhibin97](https://github.com/songzhibin97)
+
 // Delete 删除历史数据
 // Author [SliverHorn](https://github.com/SliverHorn)
 // Author [songzhibin97](https://github.com/songzhibin97)
@@ -140,15 +155,3 @@ func (autoCodeHistoryService *AutoCodeHistoryService) Delete(info *request.GetBy
 // GetList 获取系统历史数据
 // Author [SliverHorn](https://github.com/SliverHorn)
 // Author [songzhibin97](https://github.com/songzhibin97)
-func (autoCodeHistoryService *AutoCodeHistoryService) GetList(info request.PageInfo) (list []response.AutoCodeHistory, total int64, err error) {
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
-	db := global.DB.Model(&system.SysAutoCodeHistory{})
-	var entities []response.AutoCodeHistory
-	err = db.Count(&total).Error
-	if err != nil {
-		return nil, total, err
-	}
-	err = db.Limit(limit).Offset(offset).Order("updated_at desc").Find(&entities).Error
-	return entities, total, err
-}

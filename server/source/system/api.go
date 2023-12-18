@@ -6,16 +6,16 @@ import (
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	sysModel "kirer.cn/server/model/system"
-	"kirer.cn/server/service/system"
+	"kirer.cn/server/source"
 )
 
 type initApi struct{}
 
-const initOrderApi = system.InitOrderSystem + 1
+const initOrderApi = source.InitOrderSystem + 1
 
 // auto run
 func init() {
-	system.RegisterInit(initOrderApi, &initApi{})
+	source.RegisterInit(initOrderApi, &initApi{})
 }
 
 func (i initApi) InitializerName() string {
@@ -25,7 +25,7 @@ func (i initApi) InitializerName() string {
 func (i *initApi) MigrateTable(ctx context.Context) (context.Context, error) {
 	db, ok := ctx.Value("db").(*gorm.DB)
 	if !ok {
-		return ctx, system.ErrMissingDBContext
+		return ctx, source.ErrMissingDBContext
 	}
 	return ctx, db.AutoMigrate(&sysModel.SysApi{})
 }
@@ -41,121 +41,92 @@ func (i *initApi) TableCreated(ctx context.Context) bool {
 func (i *initApi) InitializeData(ctx context.Context) (context.Context, error) {
 	db, ok := ctx.Value("db").(*gorm.DB)
 	if !ok {
-		return ctx, system.ErrMissingDBContext
+		return ctx, source.ErrMissingDBContext
 	}
 	entities := []sysModel.SysApi{
-		{ApiGroup: "jwt", Method: "POST", Path: "/jwt/jsonInBlacklist", Description: "jwt加入黑名单(退出，必选)"},
+		{Group: "jwt", Method: "POST", Path: "/jwt/jsonInBlacklist", Desc: "jwt加入黑名单(退出，必选)"},
 
-		{ApiGroup: "系统用户", Method: "DELETE", Path: "/user/deleteUser", Description: "删除用户"},
-		{ApiGroup: "系统用户", Method: "POST", Path: "/user/admin_register", Description: "用户注册"},
-		{ApiGroup: "系统用户", Method: "POST", Path: "/user/getUserList", Description: "获取用户列表"},
-		{ApiGroup: "系统用户", Method: "PUT", Path: "/user/setUserInfo", Description: "设置用户信息"},
-		{ApiGroup: "系统用户", Method: "PUT", Path: "/user/setSelfInfo", Description: "设置自身信息(必选)"},
-		{ApiGroup: "系统用户", Method: "GET", Path: "/user/getUserInfo", Description: "获取自身信息(必选)"},
-		{ApiGroup: "系统用户", Method: "POST", Path: "/user/setUserAuthorities", Description: "设置权限组"},
-		{ApiGroup: "系统用户", Method: "POST", Path: "/user/changePassword", Description: "修改密码（建议选择)"},
-		{ApiGroup: "系统用户", Method: "POST", Path: "/user/setUserAuthority", Description: "修改用户角色(必选)"},
-		{ApiGroup: "系统用户", Method: "POST", Path: "/user/resetPassword", Description: "重置用户密码"},
+		{Group: "系统用户", Method: "DELETE", Path: "/user/deleteUser", Desc: "删除用户"},
+		{Group: "系统用户", Method: "POST", Path: "/user/admin_register", Desc: "用户注册"},
+		{Group: "系统用户", Method: "POST", Path: "/user/getUserList", Desc: "获取用户列表"},
+		{Group: "系统用户", Method: "PUT", Path: "/user/setUserInfo", Desc: "设置用户信息"},
+		{Group: "系统用户", Method: "PUT", Path: "/user/setSelfInfo", Desc: "设置自身信息(必选)"},
+		{Group: "系统用户", Method: "GET", Path: "/user/getUserInfo", Desc: "获取自身信息(必选)"},
+		{Group: "系统用户", Method: "POST", Path: "/user/setUserAuthorities", Desc: "设置权限组"},
+		{Group: "系统用户", Method: "POST", Path: "/user/changePassword", Desc: "修改密码（建议选择)"},
+		{Group: "系统用户", Method: "POST", Path: "/user/setUserAuth", Desc: "修改用户角色(必选)"},
+		{Group: "系统用户", Method: "POST", Path: "/user/resetPassword", Desc: "重置用户密码"},
 
-		{ApiGroup: "api", Method: "POST", Path: "/api/createApi", Description: "创建api"},
-		{ApiGroup: "api", Method: "POST", Path: "/api/deleteApi", Description: "删除Api"},
-		{ApiGroup: "api", Method: "POST", Path: "/api/updateApi", Description: "更新Api"},
-		{ApiGroup: "api", Method: "POST", Path: "/api/getApiList", Description: "获取api列表"},
-		{ApiGroup: "api", Method: "POST", Path: "/api/getAllApis", Description: "获取所有api"},
-		{ApiGroup: "api", Method: "POST", Path: "/api/getApiById", Description: "获取api详细信息"},
-		{ApiGroup: "api", Method: "DELETE", Path: "/api/deleteApisByIds", Description: "批量删除api"},
+		{Group: "api", Method: "POST", Path: "/api/create", Desc: "创建api"},
+		{Group: "api", Method: "DELETE", Path: "/api/delete", Desc: "删除Api"},
+		{Group: "api", Method: "DELETE", Path: "/api/deletes", Desc: "批量删除api"},
+		{Group: "api", Method: "PUT", Path: "/api/update", Desc: "更新Api"},
+		{Group: "api", Method: "POST", Path: "/api/get", Desc: "获取api详细信息"},
+		{Group: "api", Method: "POST", Path: "/api/list", Desc: "获取api列表"},
+		{Group: "api", Method: "POST", Path: "/api/all", Desc: "获取所有api"},
 
-		{ApiGroup: "角色", Method: "POST", Path: "/authority/copyAuthority", Description: "拷贝角色"},
-		{ApiGroup: "角色", Method: "POST", Path: "/authority/createAuthority", Description: "创建角色"},
-		{ApiGroup: "角色", Method: "POST", Path: "/authority/deleteAuthority", Description: "删除角色"},
-		{ApiGroup: "角色", Method: "PUT", Path: "/authority/updateAuthority", Description: "更新角色信息"},
-		{ApiGroup: "角色", Method: "POST", Path: "/authority/getAuthorityList", Description: "获取角色列表"},
-		{ApiGroup: "角色", Method: "POST", Path: "/authority/setDataAuthority", Description: "设置角色资源权限"},
+		{Group: "角色", Method: "POST", Path: "/auth/create", Desc: "创建角色"},
+		{Group: "角色", Method: "DELETE", Path: "/auth/delete", Desc: "删除角色"},
+		{Group: "角色", Method: "PUT", Path: "/auth/update", Desc: "更新角色信息"},
+		{Group: "角色", Method: "POST", Path: "/auth/list", Desc: "获取角色列表"},
+		{Group: "角色", Method: "POST", Path: "/auth/copy", Desc: "拷贝角色"},
+		{Group: "角色", Method: "POST", Path: "/auth/set_data", Desc: "设置角色资源权限"},
 
-		{ApiGroup: "casbin", Method: "POST", Path: "/casbin/updateCasbin", Description: "更改角色api权限"},
-		{ApiGroup: "casbin", Method: "POST", Path: "/casbin/getPolicyPathByAuthorityId", Description: "获取权限列表"},
+		{Group: "按钮权限", Method: "DELETE", Path: "/auth_btn/delete", Desc: "删除按钮"},
+		{Group: "按钮权限", Method: "PUT", Path: "/auth_btn/update", Desc: "设置按钮权限"},
+		{Group: "按钮权限", Method: "POST", Path: "/auth_btn/get", Desc: "获取已有按钮权限"},
 
-		{ApiGroup: "菜单", Method: "POST", Path: "/menu/addBaseMenu", Description: "新增菜单"},
-		{ApiGroup: "菜单", Method: "POST", Path: "/menu/getMenu", Description: "获取菜单树(必选)"},
-		{ApiGroup: "菜单", Method: "POST", Path: "/menu/deleteBaseMenu", Description: "删除菜单"},
-		{ApiGroup: "菜单", Method: "POST", Path: "/menu/updateBaseMenu", Description: "更新菜单"},
-		{ApiGroup: "菜单", Method: "POST", Path: "/menu/getBaseMenuById", Description: "根据id获取菜单"},
-		{ApiGroup: "菜单", Method: "POST", Path: "/menu/getMenuList", Description: "分页获取基础menu列表"},
-		{ApiGroup: "菜单", Method: "POST", Path: "/menu/getBaseMenuTree", Description: "获取用户动态路由"},
-		{ApiGroup: "菜单", Method: "POST", Path: "/menu/getMenuAuthority", Description: "获取指定角色menu"},
-		{ApiGroup: "菜单", Method: "POST", Path: "/menu/addMenuAuthority", Description: "增加menu和角色关联关系"},
+		{Group: "Casbin", Method: "PUT", Path: "/casbin/update", Desc: "更改角色api权限"},
+		{Group: "Casbin", Method: "POST", Path: "/casbin/get", Desc: "获取权限列表"},
 
-		{ApiGroup: "分片上传", Method: "GET", Path: "/fileUploadAndDownload/findFile", Description: "寻找目标文件（秒传）"},
-		{ApiGroup: "分片上传", Method: "POST", Path: "/fileUploadAndDownload/breakpointContinue", Description: "断点续传"},
-		{ApiGroup: "分片上传", Method: "POST", Path: "/fileUploadAndDownload/breakpointContinueFinish", Description: "断点续传完成"},
-		{ApiGroup: "分片上传", Method: "POST", Path: "/fileUploadAndDownload/removeChunk", Description: "上传完成移除文件"},
+		{Group: "菜单", Method: "POST", Path: "/menu/create", Desc: "新增菜单"},
+		{Group: "菜单", Method: "POST", Path: "/menu/create_auth", Desc: "增加menu和角色关联关系"},
+		{Group: "菜单", Method: "DELETE", Path: "/menu/delete", Desc: "删除菜单"},
+		{Group: "菜单", Method: "PUT", Path: "/menu/update", Desc: "更新菜单"},
+		{Group: "菜单", Method: "POST", Path: "/menu/get", Desc: "根据id获取菜单"},
+		{Group: "菜单", Method: "POST", Path: "/menu/get_auth", Desc: "获取指定角色menu"},
+		{Group: "菜单", Method: "POST", Path: "/menu/get_current", Desc: "获取菜单树(必选)"},
+		{Group: "菜单", Method: "POST", Path: "/menu/list", Desc: "分页获取基础menu列表"},
+		{Group: "菜单", Method: "POST", Path: "/menu/all", Desc: "获取用户动态路由"},
 
-		{ApiGroup: "文件上传与下载", Method: "POST", Path: "/fileUploadAndDownload/upload", Description: "文件上传示例"},
-		{ApiGroup: "文件上传与下载", Method: "POST", Path: "/fileUploadAndDownload/deleteFile", Description: "删除文件"},
-		{ApiGroup: "文件上传与下载", Method: "POST", Path: "/fileUploadAndDownload/editFileName", Description: "文件名或者备注编辑"},
-		{ApiGroup: "文件上传与下载", Method: "POST", Path: "/fileUploadAndDownload/getFileList", Description: "获取上传文件列表"},
+		{Group: "系统字典", Method: "POST", Path: "/dic/create", Desc: "新增字典"},
+		{Group: "系统字典", Method: "DELETE", Path: "/dic/delete", Desc: "删除字典"},
+		{Group: "系统字典", Method: "PUT", Path: "/dic/update", Desc: "更新字典"},
+		{Group: "系统字典", Method: "GET", Path: "/dic/get", Desc: "根据ID获取字典"},
+		{Group: "系统字典", Method: "GET", Path: "/dic/list", Desc: "获取字典列表"},
 
-		{ApiGroup: "系统服务", Method: "POST", Path: "/system/getServerInfo", Description: "获取服务器信息"},
-		{ApiGroup: "系统服务", Method: "POST", Path: "/system/getSystemConfig", Description: "获取配置文件内容"},
-		{ApiGroup: "系统服务", Method: "POST", Path: "/system/setSystemConfig", Description: "设置配置文件内容"},
+		{Group: "系统字典详情", Method: "POST", Path: "/dic_detail/create", Desc: "新增字典内容"},
+		{Group: "系统字典详情", Method: "DELETE", Path: "/dic_detail/delete", Desc: "删除字典内容"},
+		{Group: "系统字典详情", Method: "PUT", Path: "/dic_detail/update", Desc: "更新字典内容"},
+		{Group: "系统字典详情", Method: "GET", Path: "/dic_detail/get", Desc: "根据ID获取字典内容"},
+		{Group: "系统字典详情", Method: "GET", Path: "/dic_detail/list", Desc: "获取字典内容列表"},
 
-		{ApiGroup: "客户", Method: "PUT", Path: "/customer/customer", Description: "更新客户"},
-		{ApiGroup: "客户", Method: "POST", Path: "/customer/customer", Description: "创建客户"},
-		{ApiGroup: "客户", Method: "DELETE", Path: "/customer/customer", Description: "删除客户"},
-		{ApiGroup: "客户", Method: "GET", Path: "/customer/customer", Description: "获取单一客户"},
-		{ApiGroup: "客户", Method: "GET", Path: "/customer/customerList", Description: "获取客户列表"},
+		{Group: "系统服务", Method: "POST", Path: "/system/get_config", Desc: "获取配置文件内容"},
+		{Group: "系统服务", Method: "POST", Path: "/system/set_config", Desc: "设置配置文件内容"},
+		{Group: "系统服务", Method: "POST", Path: "/system/get_info", Desc: "获取服务器信息"},
+		{Group: "系统服务", Method: "POST", Path: "/system/reload", Desc: "重启服务"},
 
-		{ApiGroup: "代码生成器", Method: "GET", Path: "/autoCode/getDB", Description: "获取所有数据库"},
-		{ApiGroup: "代码生成器", Method: "GET", Path: "/autoCode/getTables", Description: "获取数据库表"},
-		{ApiGroup: "代码生成器", Method: "POST", Path: "/autoCode/createTemp", Description: "自动化代码"},
-		{ApiGroup: "代码生成器", Method: "POST", Path: "/autoCode/preview", Description: "预览自动化代码"},
-		{ApiGroup: "代码生成器", Method: "GET", Path: "/autoCode/getColumn", Description: "获取所选table的所有字段"},
-		{ApiGroup: "代码生成器", Method: "POST", Path: "/autoCode/createPlug", Description: "自动创建插件包"},
-		{ApiGroup: "代码生成器", Method: "POST", Path: "/autoCode/installPlugin", Description: "安装插件"},
-		{ApiGroup: "代码生成器", Method: "POST", Path: "/autoCode/pubPlug", Description: "打包插件"},
+		{Group: "操作记录", Method: "POST", Path: "/record/create", Desc: "新增操作记录"},
+		{Group: "操作记录", Method: "DELETE", Path: "/record/delete", Desc: "删除操作记录"},
+		{Group: "操作记录", Method: "DELETE", Path: "/record/deletes", Desc: "批量删除操作历史"},
+		{Group: "操作记录", Method: "GET", Path: "/record/get", Desc: "根据ID获取操作记录"},
+		{Group: "操作记录", Method: "GET", Path: "/record/list", Desc: "获取操作记录列表"},
 
-		{ApiGroup: "包（pkg）生成器", Method: "POST", Path: "/autoCode/createPackage", Description: "生成包(package)"},
-		{ApiGroup: "包（pkg）生成器", Method: "POST", Path: "/autoCode/getPackage", Description: "获取所有包(package)"},
-		{ApiGroup: "包（pkg）生成器", Method: "POST", Path: "/autoCode/delPackage", Description: "删除包(package)"},
-
-		{ApiGroup: "代码生成器历史", Method: "POST", Path: "/autoCode/getMeta", Description: "获取meta信息"},
-		{ApiGroup: "代码生成器历史", Method: "POST", Path: "/autoCode/rollback", Description: "回滚自动生成代码"},
-		{ApiGroup: "代码生成器历史", Method: "POST", Path: "/autoCode/getSysHistory", Description: "查询回滚记录"},
-		{ApiGroup: "代码生成器历史", Method: "POST", Path: "/autoCode/delSysHistory", Description: "删除回滚记录"},
-
-		{ApiGroup: "系统字典详情", Method: "PUT", Path: "/sysDictionaryDetail/updateSysDictionaryDetail", Description: "更新字典内容"},
-		{ApiGroup: "系统字典详情", Method: "POST", Path: "/sysDictionaryDetail/createSysDictionaryDetail", Description: "新增字典内容"},
-		{ApiGroup: "系统字典详情", Method: "DELETE", Path: "/sysDictionaryDetail/deleteSysDictionaryDetail", Description: "删除字典内容"},
-		{ApiGroup: "系统字典详情", Method: "GET", Path: "/sysDictionaryDetail/findSysDictionaryDetail", Description: "根据ID获取字典内容"},
-		{ApiGroup: "系统字典详情", Method: "GET", Path: "/sysDictionaryDetail/getSysDictionaryDetailList", Description: "获取字典内容列表"},
-
-		{ApiGroup: "系统字典", Method: "POST", Path: "/sysDictionary/createSysDictionary", Description: "新增字典"},
-		{ApiGroup: "系统字典", Method: "DELETE", Path: "/sysDictionary/deleteSysDictionary", Description: "删除字典"},
-		{ApiGroup: "系统字典", Method: "PUT", Path: "/sysDictionary/updateSysDictionary", Description: "更新字典"},
-		{ApiGroup: "系统字典", Method: "GET", Path: "/sysDictionary/findSysDictionary", Description: "根据ID获取字典"},
-		{ApiGroup: "系统字典", Method: "GET", Path: "/sysDictionary/getSysDictionaryList", Description: "获取字典列表"},
-
-		{ApiGroup: "操作记录", Method: "POST", Path: "/sysOperationRecord/createSysOperationRecord", Description: "新增操作记录"},
-		{ApiGroup: "操作记录", Method: "GET", Path: "/sysOperationRecord/findSysOperationRecord", Description: "根据ID获取操作记录"},
-		{ApiGroup: "操作记录", Method: "GET", Path: "/sysOperationRecord/getSysOperationRecordList", Description: "获取操作记录列表"},
-		{ApiGroup: "操作记录", Method: "DELETE", Path: "/sysOperationRecord/deleteSysOperationRecord", Description: "删除操作记录"},
-		{ApiGroup: "操作记录", Method: "DELETE", Path: "/sysOperationRecord/deleteSysOperationRecordByIds", Description: "批量删除操作历史"},
-
-		{ApiGroup: "断点续传(插件版)", Method: "POST", Path: "/simpleUploader/upload", Description: "插件版分片上传"},
-		{ApiGroup: "断点续传(插件版)", Method: "GET", Path: "/simpleUploader/checkFileMd5", Description: "文件完整度验证"},
-		{ApiGroup: "断点续传(插件版)", Method: "GET", Path: "/simpleUploader/mergeFileMd5", Description: "上传完成合并文件"},
-
-		{ApiGroup: "email", Method: "POST", Path: "/email/emailTest", Description: "发送测试邮件"},
-		{ApiGroup: "email", Method: "POST", Path: "/email/emailSend", Description: "发送邮件示例"},
-
-		{ApiGroup: "按钮权限", Method: "POST", Path: "/authorityBtn/setAuthorityBtn", Description: "设置按钮权限"},
-		{ApiGroup: "按钮权限", Method: "POST", Path: "/authorityBtn/getAuthorityBtn", Description: "获取已有按钮权限"},
-		{ApiGroup: "按钮权限", Method: "POST", Path: "/authorityBtn/canRemoveAuthorityBtn", Description: "删除按钮"},
-
-		{ApiGroup: "万用表格", Method: "POST", Path: "/chatGpt/getTable", Description: "通过gpt获取内容"},
-		{ApiGroup: "万用表格", Method: "POST", Path: "/chatGpt/createSK", Description: "录入sk"},
-		{ApiGroup: "万用表格", Method: "GET", Path: "/chatGpt/getSK", Description: "获取sk"},
-		{ApiGroup: "万用表格", Method: "DELETE", Path: "/chatGpt/deleteSK", Description: "删除sk"},
+		// {Group: "代码生成器", Method: "GET", Path: "/autoCode/getDB", Desc: "获取所有数据库"},
+		// {Group: "代码生成器", Method: "GET", Path: "/autoCode/getTables", Desc: "获取数据库表"},
+		// {Group: "代码生成器", Method: "POST", Path: "/autoCode/createTemp", Desc: "自动化代码"},
+		// {Group: "代码生成器", Method: "POST", Path: "/autoCode/preview", Desc: "预览自动化代码"},
+		// {Group: "代码生成器", Method: "GET", Path: "/autoCode/getColumn", Desc: "获取所选table的所有字段"},
+		// {Group: "代码生成器", Method: "POST", Path: "/autoCode/createPlug", Desc: "自动创建插件包"},
+		// {Group: "代码生成器", Method: "POST", Path: "/autoCode/installPlugin", Desc: "安装插件"},
+		// {Group: "代码生成器", Method: "POST", Path: "/autoCode/pubPlug", Desc: "打包插件"},
+		// {Group: "包生成器", Method: "POST", Path: "/autoCode/createPackage", Desc: "生成包(package)"},
+		// {Group: "包生成器", Method: "POST", Path: "/autoCode/getPackage", Desc: "获取所有包(package)"},
+		// {Group: "包生成器", Method: "POST", Path: "/autoCode/delPackage", Desc: "删除包(package)"},
+		// {Group: "代码生成器历史", Method: "POST", Path: "/autoCode/getMeta", Desc: "获取meta信息"},
+		// {Group: "代码生成器历史", Method: "POST", Path: "/autoCode/rollback", Desc: "回滚自动生成代码"},
+		// {Group: "代码生成器历史", Method: "POST", Path: "/autoCode/getSysHistory", Desc: "查询回滚记录"},
+		// {Group: "代码生成器历史", Method: "POST", Path: "/autoCode/delSysHistory", Desc: "删除回滚记录"},
 	}
 	if err := db.Create(&entities).Error; err != nil {
 		return ctx, errors.Wrap(err, sysModel.SysApi{}.TableName()+"表数据初始化失败!")
@@ -169,7 +140,7 @@ func (i *initApi) DataInserted(ctx context.Context) bool {
 	if !ok {
 		return false
 	}
-	if errors.Is(db.Where("path = ? AND method = ?", "/authorityBtn/canRemoveAuthorityBtn", "POST").
+	if errors.Is(db.Where("path = ? AND method = ?", "/jwt/jsonInBlacklist", "POST").
 		First(&sysModel.SysApi{}).Error, gorm.ErrRecordNotFound) {
 		return false
 	}
