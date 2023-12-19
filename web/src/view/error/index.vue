@@ -27,6 +27,6 @@ defineOptions({
 const userStore = useUserStore()
 const router = useRouter()
 const toDashboard = () => {
-  router.push({ name: userStore.userInfo.authority.defaultRouter })
+  router.push({ name: userStore.userInfo.auth.defaultRouter })
 }
 </script>

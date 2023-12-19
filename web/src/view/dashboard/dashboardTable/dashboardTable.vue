@@ -23,7 +23,6 @@
 </template>
 
 <script setup>
-import { Commits } from '@/api/github'
 import { formatTimeToStr } from '@/utils/date.js'
 import { ref } from 'vue'
 
@@ -34,23 +33,6 @@ defineOptions({
 const loading = ref(true)
 const dataTimeline = ref([])
 
-const loadCommits = () => {
-  Commits(0).then(({ data }) => {
-    loading.value = false
-    data.forEach((element, index) => {
-      if (element.commit.message && index < 10) {
-        dataTimeline.value.push({
-          from: formatTimeToStr(element.commit.author.date, 'yyyy-MM-dd'),
-          title: element.commit.author.name,
-          showDayAndMonth: true,
-          message: element.commit.message,
-        })
-      }
-    })
-  })
-}
-
-loadCommits()
 </script>
 
 <style lang="scss" scoped>

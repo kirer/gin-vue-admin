@@ -110,12 +110,12 @@
                             <el-dropdown-menu>
                               <el-dropdown-item>
                                 <span class="font-bold">
-                                  当前角色：{{ userStore.userInfo.authority.authorityName }}
+                                  当前角色：{{ userStore.userInfo.auth.authorityName }}
                                 </span>
                               </el-dropdown-item>
-                              <template v-if="userStore.userInfo.authorities">
+                              <template v-if="userStore.userInfo.auths">
                                 <el-dropdown-item
-                                  v-for="item in userStore.userInfo.authorities.filter(i=>i.authorityId!==userStore.userInfo.authorityId)"
+                                  v-for="item in userStore.userInfo.auths.filter(i=>i.authorityId!==userStore.userInfo.authId)"
                                   :key="item.authorityId"
                                   @click="changeUserAuth(item.authorityId)"
                                 >

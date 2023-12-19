@@ -1,6 +1,6 @@
 import { asyncRouterHandle } from '@/utils/asyncRouter'
 import { emitter } from '@/utils/bus.js'
-import { asyncMenu } from '@/api/menu'
+import { menu_get_current } from '@/api/menu'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -69,7 +69,7 @@ export const useRouterStore = defineStore('router', () => {
       },
       children: []
     }]
-    const asyncRouterRes = await asyncMenu()
+    const asyncRouterRes = await menu_get_current()
     const asyncRouter = asyncRouterRes.data.menus
     asyncRouter && asyncRouter.push({
       path: 'reload',

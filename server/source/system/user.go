@@ -67,7 +67,7 @@ func (i *initUser) InitializeData(ctx context.Context) (next context.Context, er
 	if !ok {
 		return next, errors.Wrap(source.ErrMissingDependentContext, "创建 [用户-权限] 关联失败, 未找到权限表初始化数据")
 	}
-	if err = db.Model(&entities[0]).Association("Authorities").Replace(authEntities); err != nil {
+	if err = db.Model(&entities[0]).Association("Auths").Replace(authEntities); err != nil {
 		return next, err
 	}
 	return next, err
@@ -79,8 +79,8 @@ func (i *initUser) DataInserted(ctx context.Context) bool {
 		return false
 	}
 	var record sysModel.SysUser
-	if errors.Is(db.Where("username = ?", "admin").Preload("Authorities").First(&record).Error, gorm.ErrRecordNotFound) { // 判断是否存在数据
+	if errors.Is(db.Where("username = ?", "admin").Preload("Auths").First(&record).Error, gorm.ErrRecordNotFound) { // 判断是否存在数据
 		return false
 	}
-	return len(record.Authorities) > 0 && record.Authorities[0].AuthId == 888
+	return len(record.Auths) > 0 && record.Auths[0].AuthId == 888
 }

@@ -46,7 +46,7 @@ func (userService *UserService) Login(u *system.SysUser) (userInter *system.SysU
 	}
 
 	var user system.SysUser
-	err = global.DB.Where("username = ?", u.Username).Preload("Authorities").Preload("Auth").First(&user).Error
+	err = global.DB.Where("username = ?", u.Username).Preload("Auths").Preload("Auth").First(&user).Error
 	if err == nil {
 		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
 			return nil, errors.New("密码错误")
@@ -91,7 +91,7 @@ func (userService *UserService) GetUserInfoList(info request.PageInfo) (list int
 	if err != nil {
 		return
 	}
-	err = db.Limit(limit).Offset(offset).Preload("Authorities").Preload("Auth").Find(&userList).Error
+	err = db.Limit(limit).Offset(offset).Preload("Auths").Preload("Auth").Find(&userList).Error
 	return userList, total, err
 }
 
@@ -192,21 +192,19 @@ func (userService *UserService) SetSelfInfo(req system.SysUser) error {
 		Updates(req).Error
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
-//@author: [SliverHorn](https://github.com/SliverHorn)
-//@function: GetUserInfo
-//@description: 获取用户信息
-//@param: uuid uuid.UUID
-//@return: err error, user system.SysUser
-
+// @author: [piexlmax](https://github.com/piexlmax)
+// @author: [SliverHorn](https://github.com/SliverHorn)
+// @function: GetUserInfo
+// @description: 获取用户信息
+// @param: uuid uuid.UUID
+// @return: err error, user system.SysUser
 func (userService *UserService) GetUserInfo(uuid uuid.UUID) (user system.SysUser, err error) {
-	var reqUser system.SysUser
-	err = global.DB.Preload("Authorities").Preload("Auth").First(&reqUser, "uuid = ?", uuid).Error
+	err = global.DB.Preload("Auths").Preload("Auth").First(&user, "uuid = ?", uuid).Error
 	if err != nil {
-		return reqUser, err
+		return user, err
 	}
-	MenuServiceApp.UserAuthDefaultRouter(&reqUser)
-	return reqUser, err
+	MenuServiceApp.UserAuthDefaultRouter(&user)
+	return user, err
 }
 
 //@author: [SliverHorn](https://github.com/SliverHorn)

@@ -91,7 +91,7 @@ web
  |   |   |   └── index.vue      -- base 约束
  |   |   ├── login              --登录 
  |   |   ├── person             --个人中心 
- |   |   ├── superAdmin         -- 超级管理员操作
+ |   |   ├── admin         -- 超级管理员操作
  |   |   ├── system             -- 系统检测页面
  |   |   ├── systemTools        -- 系统配置相关页面
  |   |   └── routerHolder.vue   -- page 入口页面 

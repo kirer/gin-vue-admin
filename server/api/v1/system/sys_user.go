@@ -151,13 +151,13 @@ func (b *BaseApi) Register(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	var authorities []system.SysAuth
+	var auths []system.SysAuth
 	for _, v := range r.AuthIds {
-		authorities = append(authorities, system.SysAuth{
+		auths = append(auths, system.SysAuth{
 			AuthId: v,
 		})
 	}
-	user := &system.SysUser{Username: r.Username, NickName: r.NickName, Password: r.Password, HeaderImg: r.HeaderImg, AuthId: r.AuthId, Authorities: authorities, Enable: r.Enable, Phone: r.Phone, Email: r.Email}
+	user := &system.SysUser{Username: r.Username, NickName: r.NickName, Password: r.Password, HeaderImg: r.HeaderImg, AuthId: r.AuthId, Auths: auths, Enable: r.Enable, Phone: r.Phone, Email: r.Email}
 	userReturn, err := userService.Register(*user)
 	if err != nil {
 		global.LOG.Error("注册失败!", zap.Error(err))
@@ -428,13 +428,13 @@ func (b *BaseApi) SetSelfInfo(c *gin.Context) {
 // @Router    /user/getUserInfo [get]
 func (b *BaseApi) GetUserInfo(c *gin.Context) {
 	uuid := utils.GetUserUuid(c)
-	ReqUser, err := userService.GetUserInfo(uuid)
+	data, err := userService.GetUserInfo(uuid)
 	if err != nil {
 		global.LOG.Error("获取失败!", zap.Error(err))
 		response.FailWithMessage("获取失败", c)
 		return
 	}
-	response.OkWithDetailed(gin.H{"userInfo": ReqUser}, "获取成功", c)
+	response.OkWithDetailed(gin.H{"userInfo": data}, "获取成功", c)
 }
 
 // ResetPassword

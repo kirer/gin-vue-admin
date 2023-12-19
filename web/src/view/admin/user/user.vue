@@ -199,7 +199,7 @@
             prop="authorityId"
           >
             <el-cascader
-              v-model="userInfo.authorityIds"
+              v-model="userInfo.authIds"
               style="width:100%"
               :options="authOptions"
               :show-all-levels="false"
@@ -373,7 +373,7 @@ const resetPasswordFunc = (row) => {
 }
 const setAuthorityIds = () => {
   tableData.value && tableData.value.forEach((user) => {
-    user.authorityIds = user.authorities && user.authorities.map(i => {
+    user.authorityIds = user.auths && user.auths.map(i => {
       return i.authorityId
     })
   })

@@ -493,13 +493,13 @@
 
 <script setup>
 import {
-  updateBaseMenu,
-  getMenuList,
-  addBaseMenu,
-  deleteBaseMenu,
-  getBaseMenuById
+  menu_update,
+  menu_list,
+  menu_create,
+  menu_delete,
+  menu_get
 } from '@/api/menu'
-import icon from '@/view/superAdmin/menu/icon.vue'
+import icon from '@/view/admin/menu/icon.vue'
 import WarningBar from '@/components/warningBar/warningBar.vue'
 import { canRemoveAuthorityBtnApi } from '@/api/authorityBtn'
 import { reactive, ref } from 'vue'
@@ -529,7 +529,7 @@ const tableData = ref([])
 const searchInfo = ref({})
 // 查询
 const getTableData = async() => {
-  const table = await getMenuList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await menu_list({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -618,7 +618,7 @@ const deleteMenu = (ID) => {
     type: 'warning'
   })
     .then(async() => {
-      const res = await deleteBaseMenu({ ID })
+      const res = await menu_delete({ ID })
       if (res.code === 0) {
         ElMessage({
           type: 'success',
@@ -672,9 +672,9 @@ const enterDialog = async() => {
     if (valid) {
       let res
       if (isEdit.value) {
-        res = await updateBaseMenu(form.value)
+        res = await menu_update(form.value)
       } else {
-        res = await addBaseMenu(form.value)
+        res = await menu_create(form.value)
       }
       if (res.code === 0) {
         ElMessage({
@@ -744,7 +744,7 @@ const addMenu = (id) => {
 // 修改菜单方法
 const editMenu = async(id) => {
   dialogTitle.value = '编辑菜单'
-  const res = await getBaseMenuById({ id })
+  const res = await menu_get({ id })
   form.value = res.data.menu
   isEdit.value = true
   setOptions()

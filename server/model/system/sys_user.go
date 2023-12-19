@@ -16,8 +16,8 @@ type SysUser struct {
 	BaseColor   string    `json:"baseColor" gorm:"default:#fff;comment:基础颜色"`                                           // 基础颜色
 	ActiveColor string    `json:"activeColor" gorm:"default:#1890ff;comment:活跃颜色"`                                      // 活跃颜色
 	AuthId      uint      `json:"authId" gorm:"default:888;comment:用户角色ID"`                                             // 用户角色ID
-	Auth        SysAuth   `json:"auth" gorm:"foreignKey:AuthId;references:id;comment:用户角色"`
-	Authorities []SysAuth `json:"authorities" gorm:"many2many:sys_auth_user;"`
+	Auth        SysAuth   `json:"auth" gorm:"foreignKey:AuthId;references:AuthId;comment:用户角色"`
+	Auths       []SysAuth `json:"auths" gorm:"many2many:sys_auth_user;"`
 	Phone       string    `json:"phone"  gorm:"comment:用户手机号"`                     // 用户手机号
 	Email       string    `json:"email"  gorm:"comment:用户邮箱"`                      // 用户邮箱
 	Enable      int       `json:"enable" gorm:"default:1;comment:用户是否被冻结 1正常 2冻结"` //用户是否被冻结 1正常 2冻结

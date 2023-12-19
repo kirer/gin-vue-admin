@@ -84,7 +84,7 @@ const top = ref(0)
 const isCollapse = ref(false)
 const isMobile = ref(false)
 const rightActive = ref('')
-const defaultRouter = computed(() => userStore.userInfo.authority.defaultRouter)
+const defaultRouter = computed(() => userStore.userInfo.auth.defaultRouter)
 const openContextMenu = (e) => {
   if (
     historys.value.length === 1 &&

@@ -182,7 +182,7 @@
 
               type="primary"
               link
-              @click="deleteApiFunc(scope.row)"
+              @click="api_deleteFunc(scope.row)"
             >删除</el-button>
           </template>
         </el-table-column>
@@ -273,13 +273,13 @@
 
 <script setup>
 import {
-  getApiById,
-  getApiList,
-  createApi,
-  updateApi,
-  deleteApi,
-  deleteApisByIds,
-  freshCasbin
+  api_create,
+  api_delete,
+  api_deletes,
+  api_update,
+  api_get,
+  api_list,
+  api_fresh,
 } from '@/api/api'
 import { toSQLLine } from '@/utils/stringFun'
 import WarningBar from '@/components/warningBar/warningBar.vue'
@@ -383,7 +383,7 @@ const sortChange = ({ prop, order }) => {
 
 // 查询
 const getTableData = async() => {
-  const table = await getApiList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await api_list({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -402,7 +402,7 @@ const handleSelectionChange = (val) => {
 const deleteVisible = ref(false)
 const onDelete = async() => {
   const ids = apis.value.map(item => item.ID)
-  const res = await deleteApisByIds({ ids })
+  const res = await api_deletes({ ids })
   if (res.code === 0) {
     ElMessage({
       type: 'success',
@@ -417,7 +417,7 @@ const onDelete = async() => {
 }
 const freshVisible = ref(false)
 const onFresh = async() => {
-  const res = await freshCasbin()
+  const res = await api_fresh()
   if (res.code === 0) {
     ElMessage({
       type: 'success',
@@ -461,7 +461,7 @@ const closeDialog = () => {
 }
 
 const editApiFunc = async(row) => {
-  const res = await getApiById({ id: row.ID })
+  const res = await api_get({ id: row.ID })
   form.value = res.data.api
   openDialog('edit')
 }
@@ -472,7 +472,7 @@ const enterDialog = async() => {
       switch (type.value) {
         case 'addApi':
           {
-            const res = await createApi(form.value)
+            const res = await api_create(form.value)
             if (res.code === 0) {
               ElMessage({
                 type: 'success',
@@ -487,7 +487,7 @@ const enterDialog = async() => {
           break
         case 'edit':
           {
-            const res = await updateApi(form.value)
+            const res = await api_update(form.value)
             if (res.code === 0) {
               ElMessage({
                 type: 'success',
@@ -514,14 +514,14 @@ const enterDialog = async() => {
   })
 }
 
-const deleteApiFunc = async(row) => {
+const api_deleteFunc = async(row) => {
   ElMessageBox.confirm('此操作将永久删除所有角色下该api, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   })
     .then(async() => {
-      const res = await deleteApi(row)
+      const res = await api_delete(row)
       if (res.code === 0) {
         ElMessage({
           type: 'success',

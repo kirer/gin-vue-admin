@@ -13,7 +13,7 @@ export const useUserStore = defineStore('user', () => {
     uuid: '',
     nickName: '',
     headerImg: '',
-    authority: {},
+    auth: {},
     sideMode: 'dark',
     activeColor: 'var(--el-color-primary)',
     baseColor: '#fff'
@@ -65,11 +65,11 @@ export const useUserStore = defineStore('user', () => {
         asyncRouters.forEach(asyncRouter => {
           router.addRoute(asyncRouter)
         })
-
-        if (!router.hasRoute(userInfo.value.authority.defaultRouter)) {
+        console.log("userinfo.auth", userInfo.value.auth.defaultRouter);
+        if (!router.hasRoute(userInfo.value.auth.defaultRouter)) {
           ElMessage.error('请联系管理员进行授权')
         } else {
-          await router.replace({ name: userInfo.value.authority.defaultRouter })
+          await router.replace({ name: userInfo.value.auth.defaultRouter })
         }
 
         loadingInstance.value.close()
