@@ -30,27 +30,27 @@ func (menuService *MenuService) CreateAuth(menus []system.SysBaseMenu, authId ui
 }
 
 func (menuService *MenuService) GetAuth(info *request.GetAuthId) (menus []system.SysMenu, err error) {
-	var baseMenu []system.SysBaseMenu
-	var SysAuthMenus []system.SysAuthMenu
-	err = global.DB.Where("sys_auth_id = ?", info.AuthId).Find(&SysAuthMenus).Error
+	var baseMenus []system.SysBaseMenu
+	var authMenus []system.SysAuthMenu
+	err = global.DB.Where("sys_auth_auth_id = ?", info.AuthId).Find(&authMenus).Error
 	if err != nil {
 		return
 	}
 
-	var MenuIds []string
+	var menuIds []string
 
-	for i := range SysAuthMenus {
-		MenuIds = append(MenuIds, SysAuthMenus[i].MenuId)
+	for i := range authMenus {
+		menuIds = append(menuIds, authMenus[i].MenuId)
 	}
 
-	err = global.DB.Where("id in (?) ", MenuIds).Order("sort").Find(&baseMenu).Error
+	err = global.DB.Where("id in (?) ", menuIds).Order("sort").Find(&baseMenus).Error
 
-	for i := range baseMenu {
+	for i := range baseMenus {
 		menus = append(menus, system.SysMenu{
-			SysBaseMenu: baseMenu[i],
+			SysBaseMenu: baseMenus[i],
 			AuthId:      info.AuthId,
-			MenuId:      strconv.Itoa(int(baseMenu[i].ID)),
-			Parameters:  baseMenu[i].Parameters,
+			MenuId:      strconv.Itoa(int(baseMenus[i].ID)),
+			Parameters:  baseMenus[i].Parameters,
 		})
 	}
 	return menus, err

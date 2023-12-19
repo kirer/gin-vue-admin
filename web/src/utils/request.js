@@ -4,37 +4,23 @@ import { useUserStore } from '@/pinia/modules/user'
 import { emitter } from '@/utils/bus.js'
 import router from '@/router/index'
 
-const service = axios.create({
-  baseURL: import.meta.env.VITE_BASE_API,
-  timeout: 99999
-})
+const service = axios.create({ baseURL: import.meta.env.VITE_BASE_API, timeout: 99999 })
 let acitveAxios = 0
 let timer
 const showLoading = () => {
   acitveAxios++
-  if (timer) {
-    clearTimeout(timer)
-  }
-  timer = setTimeout(() => {
-    if (acitveAxios > 0) {
-      emitter.emit('showLoading')
-    }
-  }, 400)
+  if (timer) { clearTimeout(timer) }
+  timer = setTimeout(() => { if (acitveAxios > 0) { emitter.emit('showLoading') } }, 400)
 }
 
 const closeLoading = () => {
   acitveAxios--
-  if (acitveAxios <= 0) {
-    clearTimeout(timer)
-    emitter.emit('closeLoading')
-  }
+  if (acitveAxios <= 0) { clearTimeout(timer); emitter.emit('closeLoading') }
 }
 // http request 拦截器
 service.interceptors.request.use(
   config => {
-    if (!config.donNotShowLoading) {
-      showLoading()
-    }
+    if (!config.donNotShowLoading) { showLoading() }
     const userStore = useUserStore()
     config.headers = {
       'Content-Type': 'application/json',
@@ -45,14 +31,8 @@ service.interceptors.request.use(
     return config
   },
   error => {
-    if (!error.config.donNotShowLoading) {
-      closeLoading()
-    }
-    ElMessage({
-      showClose: true,
-      message: error,
-      type: 'error'
-    })
+    if (!error.config.donNotShowLoading) { closeLoading() }
+    ElMessage({ showClose: true, message: error, type: 'error' })
     return error
   }
 )
@@ -61,36 +41,23 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const userStore = useUserStore()
-    if (!response.config.donNotShowLoading) {
-      closeLoading()
-    }
-    if (response.headers['new-token']) {
-      userStore.setToken(response.headers['new-token'])
-    }
+    if (!response.config.donNotShowLoading) { closeLoading() }
+    if (response.headers['new-token']) { userStore.setToken(response.headers['new-token']) }
     if (response.data.code === 0 || response.headers.success === 'true') {
-      if (response.headers.msg) {
-        response.data.msg = decodeURI(response.headers.msg)
-      }
+      if (response.headers.msg) { response.data.msg = decodeURI(response.headers.msg) }
       return response.data
-    } else {
-      ElMessage({
-        showClose: true,
-        message: response.data.msg || decodeURI(response.headers.msg),
-        type: 'error'
-      })
-      if (response.data.data && response.data.data.reload) {
-        userStore.token = ''
-        localStorage.clear()
-        router.push({ name: 'Login', replace: true })
-      }
-      return response.data.msg ? response.data : response
     }
+    console.log(response);
+    ElMessage({ showClose: true, message: response.data.msg || decodeURI(response.headers.msg), type: 'error' })
+    if (response.data.data && response.data.data.reload) {
+      userStore.token = ''
+      localStorage.clear()
+      router.push({ name: 'Login', replace: true })
+    }
+    return response.data.msg ? response.data : response
   },
   error => {
-    if (!error.config.donNotShowLoading) {
-      closeLoading()
-    }
-
+    if (!error.config.donNotShowLoading) { closeLoading() }
     if (!error.response) {
       ElMessageBox.confirm(`
         <p>检测到请求错误</p>

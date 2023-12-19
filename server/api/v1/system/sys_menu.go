@@ -140,9 +140,7 @@ func (a *AuthMenuApi) GetAuth(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	global.LOG.Error(">>>", zap.Any(">>>", data))
 	menus, err := menuService.GetAuth(&data)
-	global.LOG.Error(">>>", zap.Any(">>>>", menus))
 	if err != nil {
 		global.LOG.Error("获取失败!", zap.Error(err))
 		response.FailWithDetailed(systemRes.SysMenusResponse{Menus: menus}, "获取失败", c)

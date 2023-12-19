@@ -9,62 +9,41 @@
       <el-button class="float-right" type="primary" @click="authDataEnter">确 定</el-button>
     </div>
     <div class="clear-both pt-4">
-      <el-checkbox-group v-model="dataAuthorityId" @change="selectAuthority">
-        <el-checkbox v-for="(item, key) in authoritys" :key="key" :label="item">{{ item.authorityName }}</el-checkbox>
+      <el-checkbox-group v-model="dataAuthId" @change="selectAuthority">
+        <el-checkbox v-for="(item, key) in auths" :key="key" :label="item">{{ item.authName }}</el-checkbox>
       </el-checkbox-group>
     </div>
   </div>
 </template>
 
 <script setup>
-import { auth_set_data } from '@/api/auth'
-import WarningBar from '@/components/warningBar/warningBar.vue'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-
-defineOptions({
-  name: 'Datas'
-})
-
+import WarningBar from '@/components/warningBar/warningBar.vue'
+import { auth_set_data } from '@/api/auth'
 const props = defineProps({
-  row: {
-    default: function () {
-      return {}
-    },
-    type: Object
-  },
-  authority: {
-    default: function () {
-      return []
-    },
-    type: Array
-  }
+  row: { default: function () { return {} }, type: Object },
+  auths: { default: function () { return [] }, type: Array }
 })
-
-const authoritys = ref([])
+const auths = ref([])
 const needConfirm = ref(false)
-//   平铺角色
-const roundAuthority = (authoritysData) => {
-  authoritysData && authoritysData.forEach(item => {
-    const obj = {}
-    obj.authorityId = item.authorityId
-    obj.authorityName = item.authorityName
-    authoritys.value.push(obj)
-    if (item.children && item.children.length) {
-      roundAuthority(item.children)
-    }
+const dataAuthId = ref([])
+// 平铺角色
+const on_round_auth = (authsData) => {
+  authsData && authsData.forEach(item => {
+    auths.value.push({ authId: item.authId, authName: item.authName })
+    if (item.children && item.children.length) { on_round_auth(item.children) }
   })
 }
-
-const dataAuthorityId = ref([])
 const init = () => {
-  roundAuthority(props.authority)
-  props.row.dataAuthorityId && props.row.dataAuthorityId.forEach(item => {
-    const obj = authoritys.value && authoritys.value.filter(au => au.authorityId === item.authorityId) && authoritys.value.filter(au => au.authorityId === item.authorityId)[0]
-    dataAuthorityId.value.push(obj)
+  console.log('====', props.auths);
+  on_round_auth(props.auths)
+  console.log('----', auths.value);
+  props.row.dataAuthId && props.row.dataAuthId.forEach(item => {
+    const obj = auths.value && auths.value.filter(au => au.authId === item.authId) && auths.value.filter(au => au.authId === item.authId)[0]
+    dataAuthId.value.push(obj)
   })
 }
-
 init()
 
 // 暴露给外层使用的切换拦截统一方法
@@ -74,24 +53,24 @@ const enterAndNext = () => {
 
 const emit = defineEmits(['changeRow'])
 const all = () => {
-  dataAuthorityId.value = [...authoritys.value]
-  emit('changeRow', 'dataAuthorityId', dataAuthorityId.value)
+  dataAuthId.value = [...auths.value]
+  emit('changeRow', 'dataAuthId', dataAuthId.value)
   needConfirm.value = true
 }
 const self = () => {
-  dataAuthorityId.value = authoritys.value.filter(item => item.authorityId === props.row.authorityId)
-  emit('changeRow', 'dataAuthorityId', dataAuthorityId.value)
+  dataAuthId.value = auths.value.filter(item => item.authId === props.row.authId)
+  emit('changeRow', 'dataAuthId', dataAuthId.value)
   needConfirm.value = true
 }
 const selfAndChildren = () => {
   const arrBox = []
   getChildrenId(props.row, arrBox)
-  dataAuthorityId.value = authoritys.value.filter(item => arrBox.indexOf(item.authorityId) > -1)
-  emit('changeRow', 'dataAuthorityId', dataAuthorityId.value)
+  dataAuthId.value = auths.value.filter(item => arrBox.indexOf(item.authId) > -1)
+  emit('changeRow', 'dataAuthId', dataAuthId.value)
   needConfirm.value = true
 }
 const getChildrenId = (row, arrBox) => {
-  arrBox.push(row.authorityId)
+  arrBox.push(row.authId)
   row.children && row.children.forEach(item => {
     getChildrenId(item, arrBox)
   })
@@ -106,7 +85,7 @@ const authDataEnter = async () => {
 
 //   选择
 const selectAuthority = () => {
-  emit('changeRow', 'dataAuthorityId', dataAuthorityId.value)
+  emit('changeRow', 'dataAuthId', dataAuthId.value)
   needConfirm.value = true
 }
 

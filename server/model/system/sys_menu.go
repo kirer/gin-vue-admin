@@ -58,9 +58,9 @@ func (SysBaseMenuBtn) TableName() string {
 
 type SysMenu struct {
 	SysBaseMenu
-	MenuId     string                 `json:"menuID" gorm:"comment:菜单ID"`
-	AuthId     uint                   `json:"authID" gorm:"comment:角色ID"`
+	MenuId     string                 `json:"menuId" gorm:"comment:菜单ID"`
+	AuthId     uint                   `json:"authId" gorm:"comment:角色ID"`
 	Children   []SysMenu              `json:"children" gorm:"-"`
-	Parameters []SysBaseMenuParameter `json:"parameters" gorm:"foreignKey:SysBaseMenuID;references:MenuId"`
+	Parameters []SysBaseMenuParameter `json:"params" gorm:"foreignKey:SysBaseMenuID;references:MenuId"`
 	Btns       map[string]uint        `json:"btns" gorm:"-"`
 }

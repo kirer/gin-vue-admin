@@ -58,21 +58,18 @@ const filterText = ref('')
 const menuTreeData = ref([])
 const menuTreeIds = ref([])
 const needConfirm = ref(false)
-const menuDefaultProps = ref({ children: 'children', label: function (data) { return data.meta.title }})
+const menuDefaultProps = ref({ children: 'children', label: function (data) { return data.meta.title } })
 
 const init = async () => {
   // 获取所有菜单树
-  const res = await menu_all()
+  var res = await menu_all()
   menuTreeData.value = res.data.menus
-  const res1 = await menu_get_auth({ authId: props.row.authId })
-  console.log('>>>>>>>>>>>', res1.data);
-  const menus = res1.data.menus
+  res = await menu_get_auth({ authId: props.row.authId })
+  const menus = res.data.menus
   const arr = []
   menus.forEach(item => {
     // 防止直接选中父级造成全选
-    if (!menus.some(same => same.parentId === item.menuId)) {
-      arr.push(Number(item.menuId))
-    }
+    if (!menus.some(same => same.parentId === item.menuId)) { arr.push(Number(item.menuId)) }
   })
   menuTreeIds.value = arr
 }
@@ -99,7 +96,7 @@ const relation = async () => {
   const checkArr = menuTree.value.getCheckedNodes(false, true)
   const res = await menu_create_auth({
     menus: checkArr,
-    authorityId: props.row.authorityId
+    authId: props.row.authId
   })
   if (res.code === 0) {
     ElMessage({
