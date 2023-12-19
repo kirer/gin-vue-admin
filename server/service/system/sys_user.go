@@ -102,7 +102,7 @@ func (userService *UserService) GetUserInfoList(info request.PageInfo) (list int
 //@return: err error
 
 func (userService *UserService) SetUserAuth(id uint, authId uint) (err error) {
-	assignErr := global.DB.Where("sys_user_id = ? AND sys_auth_id = ?", id, authId).First(&system.SysUserAuth{}).Error
+	assignErr := global.DB.Where("sys_user_id = ? AND sys_auth_id = ?", id, authId).First(&system.SysAuthUser{}).Error
 	if errors.Is(assignErr, gorm.ErrRecordNotFound) {
 		return errors.New("该用户无此角色")
 	}
@@ -118,13 +118,13 @@ func (userService *UserService) SetUserAuth(id uint, authId uint) (err error) {
 
 func (userService *UserService) SetUserAuthorities(id uint, authIds []uint) (err error) {
 	return global.DB.Transaction(func(tx *gorm.DB) error {
-		TxErr := tx.Delete(&[]system.SysUserAuth{}, "sys_user_id = ?", id).Error
+		TxErr := tx.Delete(&[]system.SysAuthUser{}, "sys_user_id = ?", id).Error
 		if TxErr != nil {
 			return TxErr
 		}
-		var useAuth []system.SysUserAuth
+		var useAuth []system.SysAuthUser
 		for _, v := range authIds {
-			useAuth = append(useAuth, system.SysUserAuth{
+			useAuth = append(useAuth, system.SysAuthUser{
 				SysUserId: id, SysAuthId: v,
 			})
 		}
@@ -152,7 +152,7 @@ func (userService *UserService) DeleteUser(id int) (err error) {
 		if err := tx.Where("id = ?", id).Delete(&system.SysUser{}).Error; err != nil {
 			return err
 		}
-		if err := tx.Delete(&[]system.SysUserAuth{}, "sys_user_id = ?", id).Error; err != nil {
+		if err := tx.Delete(&[]system.SysAuthUser{}, "sys_user_id = ?", id).Error; err != nil {
 			return err
 		}
 		return nil

@@ -86,7 +86,7 @@ func (menuService *MenuService) All() (menus []system.SysBaseMenu, err error) {
 
 func (menuService *MenuService) UserAuthDefaultRouter(user *system.SysUser) {
 	var menuIds []string
-	err := global.DB.Model(&system.SysAuthMenu{}).Where("sys_auth_id = ?", user.AuthId).Pluck("sys_base_menu_id", &menuIds).Error
+	err := global.DB.Model(&system.SysAuthMenu{}).Where("sys_auth_id = ?", user.AuthId).Pluck("sys_menu_id", &menuIds).Error
 	if err != nil {
 		return
 	}
@@ -102,20 +102,16 @@ func (menuService *MenuService) getMenuTreeMap(authId uint) (treeMap map[string]
 	var baseMenu []system.SysBaseMenu
 	var btns []system.SysAuthBtn
 	treeMap = make(map[string][]system.SysMenu)
-
-	var SysAuthMenus []system.SysAuthMenu
-	err = global.DB.Where("sys_auth_id = ?", authId).Find(&SysAuthMenus).Error
+	var authMenus []system.SysAuthMenu
+	err = global.DB.Where("sys_auth_auth_id = ?", authId).Find(&authMenus).Error
 	if err != nil {
 		return
 	}
-
-	var MenuIds []string
-
-	for i := range SysAuthMenus {
-		MenuIds = append(MenuIds, SysAuthMenus[i].MenuId)
+	var menuIDs []string
+	for i := range authMenus {
+		menuIDs = append(menuIDs, authMenus[i].MenuId)
 	}
-
-	err = global.DB.Where("id in (?)", MenuIds).Order("sort").Preload("Parameters").Find(&baseMenu).Error
+	err = global.DB.Where("id in (?)", menuIDs).Order("sort").Preload("Parameters").Find(&baseMenu).Error
 	if err != nil {
 		return
 	}

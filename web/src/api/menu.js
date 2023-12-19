@@ -5,7 +5,7 @@ import service from '@/utils/request'
 // @Router /menu/getMenu [post]
 export const asyncMenu = () => {
   return service({
-    url: '/menu/getMenu',
+    url: '/menu/get_current',
     method: 'post'
   })
 }

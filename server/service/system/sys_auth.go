@@ -72,7 +72,7 @@ func (authService *AuthService) Delete(data *system.SysAuth) error {
 				return err
 			}
 		}
-		if err = tx.Delete(&system.SysUserAuth{}, "sys_auth_id = ?", data.AuthId).Error; err != nil {
+		if err = tx.Delete(&system.SysAuthUser{}, "sys_auth_id = ?", data.AuthId).Error; err != nil {
 			return err
 		}
 		if err = tx.Where("auth_id = ?", data.AuthId).Delete(&[]system.SysAuthBtn{}).Error; err != nil {

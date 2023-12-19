@@ -15,11 +15,11 @@ func (baseMenuService *BaseMenuService) Delete(id int) (err error) {
 	if err != nil {
 		var menu system.SysBaseMenu
 		db := global.DB.Preload("SysAuths").Where("id = ?", id).First(&menu).Delete(&menu)
-		err = global.DB.Delete(&system.SysBaseMenuParameter{}, "sys_base_menu_id = ?", id).Error
+		err = global.DB.Delete(&system.SysBaseMenuParameter{}, "sys_menu_id = ?", id).Error
 		if err != nil {
 			return
 		}
-		err = global.DB.Delete(&system.SysBaseMenuBtn{}, "sys_base_menu_id = ?", id).Error
+		err = global.DB.Delete(&system.SysBaseMenuBtn{}, "sys_menu_id = ?", id).Error
 		if err != nil {
 			return
 		}
@@ -65,12 +65,12 @@ func (baseMenuService *BaseMenuService) Update(menu system.SysBaseMenu) (err err
 				return errors.New("存在相同name修改失败")
 			}
 		}
-		txErr := tx.Unscoped().Delete(&system.SysBaseMenuParameter{}, "sys_base_menu_id = ?", menu.ID).Error
+		txErr := tx.Unscoped().Delete(&system.SysBaseMenuParameter{}, "sys_menu_id = ?", menu.ID).Error
 		if txErr != nil {
 			global.LOG.Debug(txErr.Error())
 			return txErr
 		}
-		txErr = tx.Unscoped().Delete(&system.SysBaseMenuBtn{}, "sys_base_menu_id = ?", menu.ID).Error
+		txErr = tx.Unscoped().Delete(&system.SysBaseMenuBtn{}, "sys_menu_id = ?", menu.ID).Error
 		if txErr != nil {
 			global.LOG.Debug(txErr.Error())
 			return txErr

@@ -27,7 +27,7 @@ func (i *initMenuAuth) TableCreated(ctx context.Context) bool {
 }
 
 func (i initMenuAuth) InitializerName() string {
-	return sysModel.SysAuthMenu{}.TableName()
+	return "sys_auth_menu"
 }
 
 func (i *initMenuAuth) InitializeData(ctx context.Context) (next context.Context, err error) {

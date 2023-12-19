@@ -45,29 +45,19 @@ func (i *initUser) InitializeData(ctx context.Context) (next context.Context, er
 	if !ok {
 		return ctx, source.ErrMissingDBContext
 	}
-	password := utils.BcryptHash("6447985")
-	adminPassword := utils.BcryptHash("123456")
+	adminPassword := utils.BcryptHash("44021993")
 
 	entities := []sysModel.SysUser{
 		{
 			UUID:      uuid.Must(uuid.NewV4()),
 			Username:  "admin",
 			Password:  adminPassword,
-			NickName:  "Mr.奇淼",
+			NickName:  "Kirer",
 			HeaderImg: "https://qmplusimg.henrongyi.top/gva_header.jpg",
 			AuthId:    888,
 			Phone:     "17611111111",
 			Email:     "333333333@qq.com",
 		},
-		{
-			UUID:      uuid.Must(uuid.NewV4()),
-			Username:  "a303176530",
-			Password:  password,
-			NickName:  "用户1",
-			HeaderImg: "https:///qmplusimg.henrongyi.top/1572075907logo.png",
-			AuthId:    9528,
-			Phone:     "17611111111",
-			Email:     "333333333@qq.com"},
 	}
 	if err = db.Create(&entities).Error; err != nil {
 		return ctx, errors.Wrap(err, sysModel.SysUser{}.TableName()+"表数据初始化失败!")
@@ -80,9 +70,6 @@ func (i *initUser) InitializeData(ctx context.Context) (next context.Context, er
 	if err = db.Model(&entities[0]).Association("Authorities").Replace(authEntities); err != nil {
 		return next, err
 	}
-	if err = db.Model(&entities[1]).Association("Authorities").Replace(authEntities[:1]); err != nil {
-		return next, err
-	}
 	return next, err
 }
 
@@ -92,8 +79,7 @@ func (i *initUser) DataInserted(ctx context.Context) bool {
 		return false
 	}
 	var record sysModel.SysUser
-	if errors.Is(db.Where("username = ?", "a303176530").
-		Preload("Authorities").First(&record).Error, gorm.ErrRecordNotFound) { // 判断是否存在数据
+	if errors.Is(db.Where("username = ?", "admin").Preload("Authorities").First(&record).Error, gorm.ErrRecordNotFound) { // 判断是否存在数据
 		return false
 	}
 	return len(record.Authorities) > 0 && record.Authorities[0].AuthId == 888
