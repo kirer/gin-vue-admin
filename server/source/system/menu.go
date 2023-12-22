@@ -60,24 +60,24 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		{MenuLevel: 0, Hidden: false, ParentId: "2", Path: "menu", Name: "menu", Component: "view/admin/menu/menu.vue", Sort: 3, Meta: Meta{Title: "菜单", Icon: "tickets", KeepAlive: true}},
 		{MenuLevel: 0, Hidden: false, ParentId: "2", Path: "api", Name: "api", Component: "view/admin/api/api.vue", Sort: 4, Meta: Meta{Title: "api", Icon: "platform", KeepAlive: true}},
 		{MenuLevel: 0, Hidden: false, ParentId: "2", Path: "dic", Name: "dic", Component: "view/admin/dic/dic.vue", Sort: 5, Meta: Meta{Title: "字典", Icon: "notebook"}},
+		{MenuLevel: 0, Hidden: true, ParentId: "2", Path: "dic_detail", Name: "dic_detail", Component: "view/admin/dic/dic_detail.vue", Sort: 5, Meta: Meta{Title: "字典详情", Icon: "notebook"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "2", Path: "record", Name: "record", Component: "view/admin/record/record.vue", Sort: 6, Meta: Meta{Title: "记录", Icon: "pie-chart"}},
 
 		{MenuLevel: 0, Hidden: false, ParentId: "0", Path: "tools", Name: "tools", Component: "view/tools/index.vue", Sort: 3, Meta: Meta{Title: "工具", Icon: "tools"}},
-		{MenuLevel: 0, Hidden: false, ParentId: "9", Path: "auto_package", Name: "auto_package", Component: "view/tools/auto/package.vue", Sort: 1, Meta: Meta{Title: "Package", Icon: "folder"}},
-		{MenuLevel: 0, Hidden: false, ParentId: "9", Path: "auto_creator", Name: "auto_creator", Component: "view/tools/auto/creator.vue", Sort: 2, Meta: Meta{Title: "代码生成器", Icon: "cpu", KeepAlive: true}},
-		{MenuLevel: 0, Hidden: false, ParentId: "9", Path: "auto_manager", Name: "auto_manager", Component: "view/tools/auto/manager.vue", Sort: 3, Meta: Meta{Title: "自动化代码管理", Icon: "magic-stick"}},
-		{MenuLevel: 0, Hidden: true, ParentId: "9", Path: "auto_creator/:id", Name: "auto_creator", Component: "view/tools/auto/creator.vue", Sort: 0, Meta: Meta{Title: "自动化代码-${id}", Icon: "magic-stick"}},
-		{MenuLevel: 0, Hidden: false, ParentId: "9", Path: "auto_form", Name: "auto_form", Component: "view/tools/auto/form.vue", Sort: 4, Meta: Meta{Title: "表单生成器", Icon: "magic-stick", KeepAlive: true}},
-		{MenuLevel: 0, Hidden: false, ParentId: "9", Path: "config", Name: "config", Component: "view/tools/config.vue", Sort: 5, Meta: Meta{Title: "系统配置", Icon: "operation"}},
+		{MenuLevel: 0, Hidden: false, ParentId: "10", Path: "auto_package", Name: "auto_package", Component: "view/tools/auto/package.vue", Sort: 1, Meta: Meta{Title: "Package", Icon: "folder"}},
+		{MenuLevel: 0, Hidden: false, ParentId: "10", Path: "auto_creator", Name: "auto_creator", Component: "view/tools/auto/creator.vue", Sort: 2, Meta: Meta{Title: "代码生成器", Icon: "cpu", KeepAlive: true}},
+		{MenuLevel: 0, Hidden: false, ParentId: "10", Path: "auto_manager", Name: "auto_manager", Component: "view/tools/auto/manager.vue", Sort: 3, Meta: Meta{Title: "自动化代码管理", Icon: "magic-stick"}},
+		{MenuLevel: 0, Hidden: true, ParentId: "10", Path: "auto_creator/:id", Name: "auto_creator", Component: "view/tools/auto/creator.vue", Sort: 0, Meta: Meta{Title: "自动化代码-${id}", Icon: "magic-stick"}},
+		{MenuLevel: 0, Hidden: false, ParentId: "10", Path: "config", Name: "config", Component: "view/tools/config.vue", Sort: 4, Meta: Meta{Title: "系统配置", Icon: "operation"}},
 
 		{MenuLevel: 0, Hidden: false, ParentId: "0", Path: "plugin", Name: "plugin", Component: "view/routerHolder.vue", Sort: 4, Meta: Meta{Title: "插件系统", Icon: "cherry"}},
-		{MenuLevel: 0, Hidden: false, ParentId: "16", Path: "plugin_install", Name: "plugin_install", Component: "view/plugin/install.vue", Sort: 1, Meta: Meta{Title: "插件安装", Icon: "box"}},
-		{MenuLevel: 0, Hidden: false, ParentId: "16", Path: "plugin_template", Name: "plugin_template", Component: "view/system/plugin/template.vue", Sort: 2, Meta: Meta{Title: "插件模板", Icon: "folder"}},
-		{MenuLevel: 0, Hidden: false, ParentId: "16", Path: "plugin_package", Name: "plugin_package", Component: "view/system/plugin/package.vue", Sort: 3, Meta: Meta{Title: "打包插件", Icon: "files"}},
+		{MenuLevel: 0, Hidden: false, ParentId: "17", Path: "plugin_install", Name: "plugin_install", Component: "view/plugin/install.vue", Sort: 1, Meta: Meta{Title: "插件安装", Icon: "box"}},
+		{MenuLevel: 0, Hidden: false, ParentId: "17", Path: "plugin_template", Name: "plugin_template", Component: "view/system/plugin/template.vue", Sort: 2, Meta: Meta{Title: "插件模板", Icon: "folder"}},
+		{MenuLevel: 0, Hidden: false, ParentId: "17", Path: "plugin_package", Name: "plugin_package", Component: "view/system/plugin/package.vue", Sort: 3, Meta: Meta{Title: "打包插件", Icon: "files"}},
 
 		{MenuLevel: 0, Hidden: false, ParentId: "0", Path: "state", Name: "state", Component: "view/system/state.vue", Sort: 5, Meta: Meta{Title: "服务器状态", Icon: "cloudy"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "0", Path: "about", Name: "about", Component: "view/about/index.vue", Sort: 6, Meta: Meta{Title: "关于", Icon: "info-filled"}},
-		{MenuLevel: 0, Hidden: true, ParentId: "0", Path: "person", Name: "person", Component: "view/person/person.vue", Sort: 0, Meta: Meta{Title: "个人信息", Icon: "message"}},
+		{MenuLevel: 0, Hidden: true, ParentId: "0", Path: "person", Name: "person", Component: "view/person/person.vue", Sort: 7, Meta: Meta{Title: "个人信息", Icon: "message"}},
 	}
 	if err = db.Create(&entities).Error; err != nil {
 		return ctx, errors.Wrap(err, SysBaseMenu{}.TableName()+"表数据初始化失败!")
@@ -91,7 +91,7 @@ func (i *initMenu) DataInserted(ctx context.Context) bool {
 	if !ok {
 		return false
 	}
-	if errors.Is(db.Where("path = ?", "autoPkg").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) { // 判断是否存在数据
+	if errors.Is(db.Where("path = ?", "admin").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) { // 判断是否存在数据
 		return false
 	}
 	return true

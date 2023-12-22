@@ -84,7 +84,7 @@ func (apiService *ApiService) Get(id int) (result system.SysApi, err error) {
 	return
 }
 
-func (apiService *ApiService) List(data system.SysApi, info request.PageInfo, order string, desc bool) (list interface{}, total int64, err error) {
+func (apiService *ApiService) List(data system.SysApi, info request.PageInfo, order string, desc bool) (list []system.SysApi, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := global.DB.Model(&system.SysApi{})
@@ -115,9 +115,9 @@ func (apiService *ApiService) List(data system.SysApi, info request.PageInfo, or
 		orderMap["method"] = true
 		if orderMap[order] {
 			if desc {
-				OrderStr = order + " desc"
+				OrderStr = fmt.Sprintf("`%s`", order) + " desc"
 			} else {
-				OrderStr = order
+				OrderStr = fmt.Sprintf("`%s`", order)
 			}
 		} else { // didn't match any order key in `orderMap`
 			err = fmt.Errorf("非法的排序字段: %v", order)
@@ -125,7 +125,7 @@ func (apiService *ApiService) List(data system.SysApi, info request.PageInfo, or
 		}
 		err = db.Order(OrderStr).Find(&list).Error
 	} else {
-		err = db.Order("group").Find(&list).Error
+		err = db.Order("`group`").Find(&list).Error
 	}
 	return list, total, err
 }

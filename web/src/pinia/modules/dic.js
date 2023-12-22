@@ -1,4 +1,4 @@
-import { findSysDictionary } from '@/api/sysDictionary'
+import { dic_get } from '@/api/dic'
 
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
@@ -14,7 +14,7 @@ export const useDictionaryStore = defineStore('dictionary', () => {
     if (dictionaryMap.value[type] && dictionaryMap.value[type].length) {
       return dictionaryMap.value[type]
     } else {
-      const res = await findSysDictionary({ type })
+      const res = await dic_get({ type })
       if (res.code === 0) {
         const dictionaryRes = {}
         const dict = []

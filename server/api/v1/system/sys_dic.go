@@ -71,7 +71,7 @@ func (s *DicApi) Get(c *gin.Context) {
 		response.FailWithMessage("字典未创建或未开启", c)
 		return
 	}
-	response.OkWithDetailed(gin.H{"resysDic": sysDic}, "查询成功", c)
+	response.OkWithDetailed(sysDic, "查询成功", c)
 }
 
 func (s *DicApi) List(c *gin.Context) {

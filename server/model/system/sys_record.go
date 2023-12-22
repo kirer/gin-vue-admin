@@ -20,3 +20,7 @@ type SysRecord struct {
 	UserID       int           `json:"user_id" form:"user_id" gorm:"column:user_id;comment:用户id"`                    // 用户id
 	User         SysUser       `json:"user"`
 }
+
+func (SysRecord) TableName() string {
+	return "sys_record"
+}

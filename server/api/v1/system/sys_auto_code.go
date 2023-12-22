@@ -62,19 +62,15 @@ func (autoApi *AutoCodeApi) CreateTemp(c *gin.Context) {
 		return
 	}
 	a.Pretreatment()
-	var apiIds []uint
-	if a.AutoCreateApiToSql {
-		if ids, err := autoCodeService.AutoCreateApi(&a); err != nil {
-			global.LOG.Error("自动化创建失败!请自行清空垃圾数据!", zap.Error(err))
-			c.Writer.Header().Add("success", "false")
-			c.Writer.Header().Add("msg", url.QueryEscape("自动化创建失败!请自行清空垃圾数据!"))
-			return
-		} else {
-			apiIds = ids
-		}
+	var apiIds, err = autoCodeService.AutoCreateApi(&a)
+	if err != nil {
+		global.LOG.Error("自动化创建失败!请自行清空垃圾数据!", zap.Error(err))
+		c.Writer.Header().Add("success", "false")
+		c.Writer.Header().Add("msg", url.QueryEscape("自动化创建失败!请自行清空垃圾数据!"))
+		return
 	}
 	a.PackageT = utils.FirstUpper(a.Package)
-	err := autoCodeService.CreateTemp(a, apiIds...)
+	err = autoCodeService.CreateTemp(a, apiIds...)
 	if err != nil {
 		if errors.Is(err, system.ErrAutoMove) {
 			c.Writer.Header().Add("success", "true")
@@ -82,7 +78,6 @@ func (autoApi *AutoCodeApi) CreateTemp(c *gin.Context) {
 		} else {
 			c.Writer.Header().Add("success", "false")
 			c.Writer.Header().Add("msg", url.QueryEscape(err.Error()))
-			_ = os.Remove("./ginvueadmin.zip")
 		}
 	} else {
 		c.Writer.Header().Add("Content-Disposition", fmt.Sprintf("attachment; filename=%s", "ginvueadmin.zip")) // fmt.Sprintf("attachment; filename=%s", filename)对下载的文件重命名

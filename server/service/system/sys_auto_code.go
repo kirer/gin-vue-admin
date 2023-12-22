@@ -269,10 +269,10 @@ func (autoCodeService *AutoCodeService) CreateTemp(autoCode system.AutoCodeStruc
 		}
 	}
 	// 增加判断: 重复创建struct
-	if autoCode.AutoMoveFile && AutoCodeHistoryServiceApp.Repeat(autoCode.BusinessDB, autoCode.StructName, autoCode.Package) {
+	if AutoCodeHistoryServiceApp.Repeat(autoCode.BusinessDB, autoCode.StructName, autoCode.Package) {
 		return RepeatErr
 	}
-	dataList, fileList, needMkdir, err := autoCodeService.getNeedList(&autoCode)
+	dataList, _, needMkdir, err := autoCodeService.getNeedList(&autoCode)
 	if err != nil {
 		return err
 	}
@@ -312,88 +312,76 @@ func (autoCodeService *AutoCodeService) CreateTemp(autoCode system.AutoCodeStruc
 		idBf.WriteString(strconv.Itoa(int(id)))
 		idBf.WriteString(";")
 	}
-	if autoCode.AutoMoveFile { // 判断是否需要自动转移
-		Init(autoCode.Package)
-		for index := range dataList {
-			autoCodeService.addAutoMoveFile(&dataList[index])
+	Init(autoCode.Package)
+	for index := range dataList {
+		autoCodeService.addAutoMoveFile(&dataList[index])
+	}
+	// 判断目标文件是否都可以移动
+	for _, value := range dataList {
+		if utils.FileExist(value.autoMoveFilePath) {
+			return errors.New(fmt.Sprintf("目标文件已存在:%s\n", value.autoMoveFilePath))
 		}
-		// 判断目标文件是否都可以移动
-		for _, value := range dataList {
-			if utils.FileExist(value.autoMoveFilePath) {
-				return errors.New(fmt.Sprintf("目标文件已存在:%s\n", value.autoMoveFilePath))
-			}
-		}
-		for _, value := range dataList { // 移动文件
-			if err := utils.FileMove(value.autoCodePath, value.autoMoveFilePath); err != nil {
-				return err
-			}
-		}
-
-		{
-			// 在gorm.go 注入 自动迁移
-			path := filepath.Join(global.CONFIG.AutoCode.Root,
-				global.CONFIG.AutoCode.Server, global.CONFIG.AutoCode.SInitialize, "gorm.go")
-			varDB := utils.MaheHump(autoCode.BusinessDB)
-			ast2.AddRegisterTablesAst(path, "RegisterTables", autoCode.Package, varDB, autoCode.BusinessDB, autoCode.StructName)
-		}
-
-		{
-			// router.go 注入 自动迁移
-			path := filepath.Join(global.CONFIG.AutoCode.Root,
-				global.CONFIG.AutoCode.Server, global.CONFIG.AutoCode.SInitialize, "router.go")
-			ast2.AddRouterCode(path, "Routers", autoCode.Package, autoCode.StructName)
-		}
-		// 给各个enter进行注入
-		err = injectionCode(autoCode.StructName, &injectionCodeMeta)
-		if err != nil {
-			return
-		}
-		// 保存生成信息
-		for _, data := range dataList {
-			if len(data.autoMoveFilePath) != 0 {
-				bf.WriteString(data.autoMoveFilePath)
-				bf.WriteString(";")
-			}
-		}
-	} else { // 打包
-		if err = utils.ZipFiles("./ginvueadmin.zip", fileList, ".", "."); err != nil {
+	}
+	for _, value := range dataList { // 移动文件
+		if err := utils.FileMove(value.autoCodePath, value.autoMoveFilePath); err != nil {
 			return err
 		}
 	}
-	if autoCode.AutoMoveFile || autoCode.AutoCreateApiToSql {
-		if autoCode.TableName != "" {
-			err = AutoCodeHistoryServiceApp.CreateAutoCodeHistory(
-				string(meta),
-				autoCode.StructName,
-				autoCode.Desc,
-				bf.String(),
-				injectionCodeMeta.String(),
-				autoCode.TableName,
-				idBf.String(),
-				autoCode.Package,
-				autoCode.BusinessDB,
-			)
-		} else {
-			err = AutoCodeHistoryServiceApp.CreateAutoCodeHistory(
-				string(meta),
-				autoCode.StructName,
-				autoCode.Desc,
-				bf.String(),
-				injectionCodeMeta.String(),
-				autoCode.StructName,
-				idBf.String(),
-				autoCode.Package,
-				autoCode.BusinessDB,
-			)
+	{
+		// 在gorm.go 注入 自动迁移
+		path := filepath.Join(global.CONFIG.AutoCode.Root,
+			global.CONFIG.AutoCode.Server, global.CONFIG.AutoCode.SInitialize, "gorm.go")
+		varDB := utils.MaheHump(autoCode.BusinessDB)
+		ast2.AddRegisterTablesAst(path, "RegisterTables", autoCode.Package, varDB, autoCode.BusinessDB, autoCode.StructName)
+	}
+	{
+		// router.go 注入 自动迁移
+		path := filepath.Join(global.CONFIG.AutoCode.Root,
+			global.CONFIG.AutoCode.Server, global.CONFIG.AutoCode.SInitialize, "router.go")
+		ast2.AddRouterCode(path, "Routers", autoCode.Package, autoCode.StructName)
+	}
+	// 给各个enter进行注入
+	err = injectionCode(autoCode.StructName, &injectionCodeMeta)
+	if err != nil {
+		return
+	}
+	// 保存生成信息
+	for _, data := range dataList {
+		if len(data.autoMoveFilePath) != 0 {
+			bf.WriteString(data.autoMoveFilePath)
+			bf.WriteString(";")
 		}
+	}
+
+	if autoCode.TableName != "" {
+		err = AutoCodeHistoryServiceApp.CreateAutoCodeHistory(
+			string(meta),
+			autoCode.StructName,
+			autoCode.Desc,
+			bf.String(),
+			injectionCodeMeta.String(),
+			autoCode.TableName,
+			idBf.String(),
+			autoCode.Package,
+			autoCode.BusinessDB,
+		)
+	} else {
+		err = AutoCodeHistoryServiceApp.CreateAutoCodeHistory(
+			string(meta),
+			autoCode.StructName,
+			autoCode.Desc,
+			bf.String(),
+			injectionCodeMeta.String(),
+			autoCode.StructName,
+			idBf.String(),
+			autoCode.Package,
+			autoCode.BusinessDB,
+		)
 	}
 	if err != nil {
 		return err
 	}
-	if autoCode.AutoMoveFile {
-		return system.ErrAutoMove
-	}
-	return nil
+	return system.ErrAutoMove
 }
 
 // @author: [piexlmax](https://github.com/piexlmax)
@@ -484,40 +472,40 @@ func (autoCodeService *AutoCodeService) addAutoMoveFile(data *tplData) {
 func (autoCodeService *AutoCodeService) AutoCreateApi(a *system.AutoCodeStruct) (ids []uint, err error) {
 	apiList := []system.SysApi{
 		{
-			Path:        "/" + a.Abbreviation + "/" + "create" + a.StructName,
-			Desc: "新增" + a.Desc,
-			Group:    a.Desc,
-			Method:      "POST",
+			Path:   "/" + a.Abbreviation + "/" + "create",
+			Desc:   "新增" + a.Desc,
+			Group:  a.Desc,
+			Method: "POST",
 		},
 		{
-			Path:        "/" + a.Abbreviation + "/" + "delete" + a.StructName,
-			Desc: "删除" + a.Desc,
-			Group:    a.Desc,
-			Method:      "DELETE",
+			Path:   "/" + a.Abbreviation + "/" + "delete",
+			Desc:   "删除" + a.Desc,
+			Group:  a.Desc,
+			Method: "DELETE",
 		},
 		{
-			Path:        "/" + a.Abbreviation + "/" + "delete" + a.StructName + "ByIds",
-			Desc: "批量删除" + a.Desc,
-			Group:    a.Desc,
-			Method:      "DELETE",
+			Path:   "/" + a.Abbreviation + "/" + "deletes",
+			Desc:   "批量删除" + a.Desc,
+			Group:  a.Desc,
+			Method: "DELETE",
 		},
 		{
-			Path:        "/" + a.Abbreviation + "/" + "update" + a.StructName,
-			Desc: "更新" + a.Desc,
-			Group:    a.Desc,
-			Method:      "PUT",
+			Path:   "/" + a.Abbreviation + "/" + "update",
+			Desc:   "更新" + a.Desc,
+			Group:  a.Desc,
+			Method: "PUT",
 		},
 		{
-			Path:        "/" + a.Abbreviation + "/" + "find" + a.StructName,
-			Desc: "根据ID获取" + a.Desc,
-			Group:    a.Desc,
-			Method:      "GET",
+			Path:   "/" + a.Abbreviation + "/" + "get",
+			Desc:   "根据ID获取" + a.Desc,
+			Group:  a.Desc,
+			Method: "GET",
 		},
 		{
-			Path:        "/" + a.Abbreviation + "/" + "get" + a.StructName + "List",
-			Desc: "获取" + a.Desc + "列表",
-			Group:    a.Desc,
-			Method:      "GET",
+			Path:   "/" + a.Abbreviation + "/" + "list",
+			Desc:   "获取" + a.Desc + "列表",
+			Group:  a.Desc,
+			Method: "GET",
 		},
 	}
 	err = global.DB.Transaction(func(tx *gorm.DB) error {

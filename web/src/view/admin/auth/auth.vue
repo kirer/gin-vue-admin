@@ -4,13 +4,9 @@
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button type="primary" icon="plus" @click="addAuthority(0)">新增角色</el-button>
-        <el-icon class="cursor-pointer"
-          @click="toDoc('https://www.bilibili.com/video/BV1kv4y1g7nT?p=8&vd_source=f2640257c21e3b547a790461ed94875e')">
-          <VideoCameraFilled />
-        </el-icon>
       </div>
-      <el-table :data="table_data" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-        row-key="authId" style="width: 100%">
+      <el-table :data="table_data" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }" row-key="authId"
+        style="width: 100%">
         <el-table-column label="角色ID" min-width="180" prop="authId" />
         <el-table-column align="left" label="角色名称" min-width="180" prop="authName" />
         <el-table-column align="left" label="操作" width="460">
@@ -26,18 +22,18 @@
     </div>
     <!-- 新增角色弹窗 -->
     <el-dialog v-model="dialogFormVisible" :title="dialogTitle">
-      <el-form ref="authForm" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="authForm" :model="form_data" :rules="rules" label-width="80px">
         <el-form-item label="父级角色" prop="parentId">
-          <el-cascader v-model="form.parentId" style="width:100%" :disabled="dialogType === 'add'"
-            :options="AuthorityOption"
+          <el-cascader v-model="form_data.parentId" style="width:100%" :disabled="dialogType === 'add'"
+            :options="auth_options"
             :props="{ checkStrictly: true, label: 'authName', value: 'authId', disabled: 'disabled', emitPath: false }"
             :show-all-levels="false" filterable />
         </el-form-item>
         <el-form-item label="角色ID" prop="authId">
-          <el-input v-model="form.authId" :disabled="dialogType === 'edit'" autocomplete="off" maxlength="15" />
+          <el-input v-model="form_data.authId" :disabled="dialogType === 'edit'" autocomplete="off" maxlength="15" />
         </el-form-item>
         <el-form-item label="角色姓名" prop="authName">
-          <el-input v-model="form.authName" autocomplete="off" />
+          <el-input v-model="form_data.authName" autocomplete="off" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -49,7 +45,7 @@
     </el-dialog>
 
     <el-drawer v-if="drawer" v-model="drawer" custom-class="auth-drawer" :with-header="false" title="角色配置">
-      <el-tabs :before-leave="autoEnter" >
+      <el-tabs :before-leave="autoEnter">
         <el-tab-pane label="角色菜单">
           <Menus ref="menus" :row="activeRow" @changeRow="changeRow" />
         </el-tab-pane>
@@ -65,31 +61,59 @@
 </template>
 
 <script setup>
-import { auth_create, auth_delete, auth_update, auth_list, auth_copy } from '@/api/auth'
+import { ref } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import WarningBar from '@/components/warningBar/warningBar.vue'
 import Menus from '@/view/admin/auth/components/menu.vue'
 import Apis from '@/view/admin/auth/components/api.vue'
 import Datas from '@/view/admin/auth/components/data.vue'
-import WarningBar from '@/components/warningBar/warningBar.vue'
-
-import { ref } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { toDoc } from '@/utils/doc'
-import { VideoCameraFilled } from '@element-plus/icons-vue'
-
-defineOptions({ name: 'Authority' })
+import { auth_create, auth_delete, auth_update, auth_list, auth_copy } from '@/api/auth'
+//
+const auth_options = ref([{ authId: 0, authName: '根角色' }])
+const set_options = () => {
+  auth_options.value = [{ authId: 0, authName: '根角色' }]
+  set_auth_options(table_data.value, auth_options.value, false)
+}
+const set_auth_options = (auth_data, options_data, disabled) => {
+  form_data.value.authId = String(form_data.value.authId)
+  auth_data && auth_data.forEach(item => {
+    var option = null;
+    if (item.children && item.children.length) {
+      option = { authId: item.authId, authName: item.authName, disabled: disabled || item.authId === form_data.value.authId, children: [] }
+      set_auth_options(item.children, option.children, disabled || item.authId === form_data.value.authId)
+    } else {
+      option = { authId: item.authId, authName: item.authName, disabled: disabled || item.authId === form_data.value.authId }
+    }
+    options_data.push(option)
+  })
+}
+//
+const page = ref(1)
+const total = ref(0)
+const page_size = ref(999)
+const table_data = ref([])
+const search_info = ref({})
+const on_table_data = async () => {
+  const table = await auth_list({ page: page.value, pageSize: page_size.value, ...search_info.value })
+  if (table.code === 0) {
+    table_data.value = table.data.list
+    total.value = table.data.total
+    page.value = table.data.page
+    page_size.value = table.data.page_size
+  }
+}
+on_table_data()
+//
 const mustUint = (rule, value, callback) => !/^[0-9]*[1-9][0-9]*$/.test(value) ? callback(new Error('请输入正整数')) : callback()
-
-const AuthorityOption = ref([{ authId: 0, authName: '根角色' }])
 const drawer = ref(false)
-const dialogType = ref('add')
 const activeRow = ref({})
-
+const dialogType = ref('add')
 const dialogTitle = ref('新增角色')
 const dialogFormVisible = ref(false)
 const apiDialogFlag = ref(false)
 const copyForm = ref({})
 
-const form = ref({ authId: 0, authName: '', parentId: 0 })
+const form_data = ref({ authId: 0, authName: '', parentId: 0 })
 const rules = ref({
   authId: [
     { required: true, message: '请输入角色ID', trigger: 'blur' },
@@ -103,23 +127,7 @@ const rules = ref({
   ]
 })
 
-const page = ref(1)
-const total = ref(0)
-const pageSize = ref(999)
-const table_data = ref([])
-const search_info = ref({})
 
-// 查询
-const on_table_data = async () => {
-  const table = await auth_list({ page: page.value, pageSize: pageSize.value, ...search_info.value })
-  if (table.code === 0) {
-    table_data.value = table.data.list
-    total.value = table.data.total
-    page.value = table.data.page
-    pageSize.value = table.data.pageSize
-  }
-}
-on_table_data()
 const changeRow = (key, value) => activeRow.value[key] = value
 const menus = ref(null)
 const apis = ref(null)
@@ -135,11 +143,11 @@ const autoEnter = (activeName, oldActiveName) => {
 }
 // 拷贝角色
 const auth_copyFunc = (row) => {
-  setOptions()
+  set_options()
   dialogTitle.value = '拷贝角色'
   dialogType.value = 'copy'
-  for (const k in form.value) {
-    form.value[k] = row[k]
+  for (const k in form_data.value) {
+    form_data.value[k] = row[k]
   }
   copyForm.value = row
   dialogFormVisible.value = true
@@ -178,14 +186,8 @@ const deleteAuth = (row) => {
 // 初始化表单
 const authForm = ref(null)
 const initForm = () => {
-  if (authForm.value) {
-    authForm.value.resetFields()
-  }
-  form.value = {
-    authId: 0,
-    authName: '',
-    parentId: 0
-  }
+  if (authForm.value) { authForm.value.resetFields() }
+  form_data.value = { authId: 0, authName: '', parentId: 0 }
 }
 // 关闭窗口
 const closeDialog = () => {
@@ -194,15 +196,14 @@ const closeDialog = () => {
   apiDialogFlag.value = false
 }
 // 确定弹窗
-
 const enterDialog = () => {
   authForm.value.validate(async valid => {
     if (valid) {
-      form.value.authId = Number(form.value.authId)
+      form_data.value.authId = Number(form_data.value.authId)
       switch (dialogType.value) {
         case 'add':
           {
-            const res = await auth_create(form.value)
+            const res = await auth_create(form_data.value)
             if (res.code === 0) {
               ElMessage({
                 type: 'success',
@@ -215,7 +216,7 @@ const enterDialog = () => {
           break
         case 'edit':
           {
-            const res = await auth_update(form.value)
+            const res = await auth_update(form_data.value)
             if (res.code === 0) {
               ElMessage({
                 type: 'success',
@@ -236,9 +237,9 @@ const enterDialog = () => {
             },
             oldAuthorityId: 0
           }
-          data.auth.authId = form.value.authId
-          data.auth.authName = form.value.authName
-          data.auth.parentId = form.value.parentId
+          data.auth.authId = form_data.value.authId
+          data.auth.authName = form_data.value.authName
+          data.auth.parentId = form_data.value.parentId
           data.auth.dataAuthorityId = copyForm.value.dataAuthorityId
           data.oldAuthorityId = copyForm.value.authId
           const res = await auth_copy(data)
@@ -257,60 +258,25 @@ const enterDialog = () => {
     }
   })
 }
-const setOptions = () => {
-  AuthorityOption.value = [
-    {
-      authId: 0,
-      authName: '根角色'
-    }
-  ]
-  setAuthorityOptions(table_data.value, AuthorityOption.value, false)
-}
-const setAuthorityOptions = (AuthorityData, optionsData, disabled) => {
-  form.value.authId = String(form.value.authId)
-  AuthorityData &&
-    AuthorityData.forEach(item => {
-      if (item.children && item.children.length) {
-        const option = {
-          authId: item.authId,
-          authName: item.authName,
-          disabled: disabled || item.authId === form.value.authId,
-          children: []
-        }
-        setAuthorityOptions(
-          item.children,
-          option.children,
-          disabled || item.authId === form.value.authId
-        )
-        optionsData.push(option)
-      } else {
-        const option = {
-          authId: item.authId,
-          authName: item.authName,
-          disabled: disabled || item.authId === form.value.authId
-        }
-        optionsData.push(option)
-      }
-    })
-}
+
 // 增加角色
 const addAuthority = (parentId) => {
   initForm()
   dialogTitle.value = '新增角色'
   dialogType.value = 'add'
-  form.value.parentId = parentId
-  setOptions()
+  form_data.value.parentId = parentId
+  set_options()
   dialogFormVisible.value = true
 }
 // 编辑角色
 const editAuthority = (row) => {
-  setOptions()
+  set_options()
   dialogTitle.value = '编辑角色'
   dialogType.value = 'edit'
-  for (const key in form.value) {
-    form.value[key] = row[key]
+  for (const key in form_data.value) {
+    form_data.value[key] = row[key]
   }
-  setOptions()
+  set_options()
   dialogFormVisible.value = true
 }
 
@@ -320,10 +286,12 @@ const editAuthority = (row) => {
 .auth {
   .el-input-number {
     margin-left: 15px;
+
     span {
       display: none;
     }
   }
+
   .el-drawer__body {
     padding: 10px
   }

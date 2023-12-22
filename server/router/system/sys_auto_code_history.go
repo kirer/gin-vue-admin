@@ -8,7 +8,7 @@ import (
 type AutoCodeHistoryRouter struct{}
 
 func (s *AutoCodeRouter) InitAutoCodeHistoryRouter(Router *gin.RouterGroup) {
-	router := Router.Group("auto_code_history")
+	router := Router.Group("autoCode")
 	api := v1.ApiGroupApp.SystemApiGroup.AutoCodeHistoryApi
 	{
 		router.POST("delSysHistory", api.Delete) // 删除回滚记录

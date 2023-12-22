@@ -1,21 +1,21 @@
 select concat('drop table ', TABLE_NAME, ';') from information_schema.TABLES where TABLE_SCHEMA = 'kirer';
-drop table casbin_rule;                
-drop table jwt_blacklists;             
-drop table sys_api;                    
-drop table sys_auth;                   
-drop table sys_auth_btn;               
-drop table sys_auth_data;              
-drop table sys_auth_menu;              
-drop table sys_auth_user;              
-drop table sys_auto_code;              
-drop table sys_auto_code_his;          
-drop table sys_dic;                    
-drop table sys_dic_detail;             
-drop table sys_menu;                   
-drop table sys_menu_btn;               
-drop table sys_menu_para;              
-drop table sys_records;                
-drop table sys_user;                    
+drop table casbin_rule;               
+drop table jwt_black;                 
+drop table sys_api;                   
+drop table sys_auth;                  
+drop table sys_auth_btn;              
+drop table sys_auth_data;             
+drop table sys_auth_menu;             
+drop table sys_auth_user;             
+drop table sys_auto_code;             
+drop table sys_auto_code_his;         
+drop table sys_dic;                   
+drop table sys_dic_detail;            
+drop table sys_menu;                  
+drop table sys_menu_btn;              
+drop table sys_menu_para;             
+drop table sys_record;                
+drop table sys_user;                                             
 
 
 ## server项目结构

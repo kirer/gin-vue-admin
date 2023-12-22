@@ -1,6 +1,7 @@
 package system
 
 import (
+	"go.uber.org/zap"
 	"kirer.cn/server/global"
 	"kirer.cn/server/model/system"
 	"kirer.cn/server/model/system/request"
@@ -29,6 +30,7 @@ func (DicDetailService *DicDetailService) Get(id uint) (result system.SysDicDeta
 }
 
 func (DicDetailService *DicDetailService) List(info request.SysDicDetailSearch) (list interface{}, total int64, err error) {
+	global.LOG.Error(">>>", zap.Any("", info))
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
@@ -45,12 +47,12 @@ func (DicDetailService *DicDetailService) List(info request.SysDicDetailSearch) 
 		db = db.Where("status = ?", info.Status)
 	}
 	if info.DicID != 0 {
-		db = db.Where("dic_id = ?", info.DicID)
+		db = db.Where("sys_dic_id = ?", info.DicID)
 	}
 	err = db.Count(&total).Error
 	if err != nil {
 		return
 	}
-	err = db.Limit(limit).Offset(offset).Order("sort").Find(&dicDetails).Error
+	err = db.Debug().Limit(limit).Offset(offset).Order("sort").Find(&dicDetails).Error
 	return dicDetails, total, err
 }

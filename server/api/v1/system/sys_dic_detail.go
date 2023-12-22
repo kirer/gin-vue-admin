@@ -81,6 +81,8 @@ func (s *DicDetailApi) Get(c *gin.Context) {
 }
 
 func (s *DicDetailApi) List(c *gin.Context) {
+	data, _ := c.GetRawData()
+	global.LOG.Error("??", zap.Any(c.Request.RequestURI, string(data)))
 	var info request.SysDicDetailSearch
 	err := c.ShouldBindQuery(&info)
 	if err != nil {

@@ -36,9 +36,7 @@ const on_round_auth = (authsData) => {
   })
 }
 const init = () => {
-  console.log('====', props.auths);
   on_round_auth(props.auths)
-  console.log('----', auths.value);
   props.row.dataAuthId && props.row.dataAuthId.forEach(item => {
     const obj = auths.value && auths.value.filter(au => au.authId === item.authId) && auths.value.filter(au => au.authId === item.authId)[0]
     dataAuthId.value.push(obj)

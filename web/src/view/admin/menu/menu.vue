@@ -13,7 +13,7 @@
       </div>
 
       <!-- 由于此处菜单跟左侧列表一一对应所以不需要分页 pageSize默认999 -->
-      <el-table :data="tableData" row-key="ID">
+      <el-table :data="table_data" row-key="ID">
         <el-table-column align="left" label="ID" min-width="100" prop="ID" />
         <el-table-column align="left" label="展示名称" min-width="120" prop="authorityName">
           <template #default="scope">
@@ -259,13 +259,13 @@ const rules = reactive({
 const page = ref(1);
 const total = ref(0);
 const pageSize = ref(999);
-const tableData = ref([]);
+const table_data = ref([]);
 const searchInfo = ref({});
 // 查询
 const on_table_data = async () => {
   const table = await menu_list({ page: page.value, pageSize: pageSize.value, ...searchInfo.value, });
   if (table.code === 0) {
-    tableData.value = table.data.list;
+    table_data.value = table.data.list;
     total.value = table.data.total;
     page.value = table.data.page;
     pageSize.value = table.data.pageSize;
@@ -351,7 +351,7 @@ const deleteMenu = (ID) => {
           type: "success",
           message: "删除成功!",
         });
-        if (tableData.value.length === 1 && page.value > 1) {
+        if (table_data.value.length === 1 && page.value > 1) {
           page.value--;
         }
         on_table_data();
@@ -429,7 +429,7 @@ const setOptions = () => {
       title: "根目录",
     },
   ];
-  setMenuOptions(tableData.value, menuOption.value, false);
+  setMenuOptions(table_data.value, menuOption.value, false);
 };
 const setMenuOptions = (menuData, optionsData, disabled) => {
   menuData &&
